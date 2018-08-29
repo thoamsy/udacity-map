@@ -1,5 +1,6 @@
-import React, { Component, Placeholder } from 'react';
+import React, { Component, Placeholder, Fragment } from 'react';
 import { createResource } from 'simple-cache-provider';
+import Map from './components/Map';
 
 import Spinner from './components/Spinner';
 import { cache } from './cache';
@@ -14,9 +15,12 @@ const SkrLoader = () => {
 class App extends Component {
   render() {
     return (
-      <Placeholder fallback={<Spinner size="large" />}>
-        <SkrLoader />
-      </Placeholder>
+      <Fragment>
+        <Placeholder fallback={<Spinner size="large" />}>
+          <SkrLoader />
+        </Placeholder>
+        <Map />
+      </Fragment>
     );
   }
 }

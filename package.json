@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "bulma": "^0.7.1",
+    "google-map-react": "^1.0.6",
+    "interaction-tracking": "./exp/interaction-tracking",
     "react": "./exp/react",
     "react-dom": "./exp/react-dom",
+    "react-scripts": "1.1.5",
     "simple-cache-provider": "./exp/simple-cache-provider",
-    "interaction-tracking": "./exp/interaction-tracking",
-    "react-scripts": "1.1.5"
+    "styled-components": "^3.4.5"
   },
   "scripts": {
     "start": "react-scripts start",
