@@ -4,11 +4,13 @@
   "private": true,
   "dependencies": {
     "bulma": "^0.7.1",
-    "google-map-react": "^1.0.6",
     "interaction-tracking": "./exp/interaction-tracking",
+    "ramda": "^0.25.0",
     "react": "./exp/react",
     "react-dom": "./exp/react-dom",
+    "react-google-maps": "^9.4.5",
     "react-scripts": "1.1.5",
+    "recompose": "^0.29.0",
     "simple-cache-provider": "./exp/simple-cache-provider",
     "styled-components": "^3.4.5"
   },
