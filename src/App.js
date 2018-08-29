@@ -1,11 +1,23 @@
-import React, { Component } from 'react';
+import React, { Component, Placeholder } from 'react';
 import { createResource } from 'simple-cache-provider';
 
-console.log(createResource);
+import Spinner from './components/Spinner';
+import { cache } from './cache';
+
+const SkrResource = createResource(() => import('./components/Skr'));
+
+const SkrLoader = () => {
+  const Skr = SkrResource.read(cache).default;
+  return <Skr />;
+};
 
 class App extends Component {
   render() {
-    return <div>skr</div>;
+    return (
+      <Placeholder fallback={<Spinner size="large" />}>
+        <SkrLoader />
+      </Placeholder>
+    );
   }
 }
 
