@@ -1,9 +1,14 @@
 import React from 'react';
-import GoogleMap from 'google-map-react';
+import {
+  GoogleMap,
+  Marker,
+  withGoogleMap,
+  withScriptjs,
+} from 'react-google-maps';
+import { withProps, compose } from 'recompose';
 
 const API_KEY = 'AIzaSyCoJc7_HdAr12c7DDQ1VRqdPWbFsJDJuww';
 
-const Any = ({ text }) => <div>{text}</div>;
 const Map = ({ center = { lat: 59.95, lng: 30.33 }, zoom = 13 }) => (
   <div style={{ height: '100vh', width: '100%' }}>
     <GoogleMap
@@ -11,9 +16,18 @@ const Map = ({ center = { lat: 59.95, lng: 30.33 }, zoom = 13 }) => (
       defaultCenter={center}
       defaultZoom={zoom}
     >
-      <Any lat={59.95541} lng={30.337844} text="skr" />
+      <Marker position={{ lat: 58.34, lng: 32.1 }} />
     </GoogleMap>
   </div>
 );
 
-export default Map;
+export default compose(
+  withProps({
+    containerElement: <div style={{ height: '100vh', width: '100%' }} />,
+    loadingElement: <div style={{ height: `100%` }} />,
+    mapElement: <div style={{ height: `100%` }} />,
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3`,
+  }),
+  withScriptjs,
+  withGoogleMap
+)(Map);
