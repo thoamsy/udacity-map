@@ -5,7 +5,6 @@ export const getLocationWithLatLng = async ({ lat, lng }) => {
   const res = await fetch(url, {
     mode: 'cors',
   });
-  console.log(res);
   if (res.ok) {
     return res.json();
   } else {

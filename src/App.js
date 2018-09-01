@@ -2,9 +2,9 @@ import React, { Component, Placeholder, Fragment } from 'react';
 import { createResource } from 'simple-cache-provider';
 
 import { getCurrentPosition } from './utils/geo';
-import { getLocationWithLatLng } from './api/geocode';
 import Map from './components/Map';
 import Spinner from './components/Spinner';
+import Location from './components/Location';
 import { cache } from './cache';
 
 const SkrResource = createResource(() => import('./components/Skr'));
@@ -12,13 +12,6 @@ const SkrLoader = () => {
   const Skr = SkrResource.read(cache).default;
   return <Skr />;
 };
-
-const locationResource = createResource(
-  getLocationWithLatLng,
-  ({ lng, lat }) => `${lat}${lng}`
-);
-
-const getLocation = center => locationResource.read(cache, center);
 
 class App extends Component {
   state = {
@@ -38,8 +31,6 @@ class App extends Component {
       center,
       hasGeo: true,
     });
-    const result = await getLocationWithLatLng(center);
-    console.log(result);
   }
 
   render() {
@@ -48,6 +39,9 @@ class App extends Component {
       <Fragment>
         <Placeholder fallback={<Spinner size="large" />}>
           <SkrLoader />
+        </Placeholder>
+        <Placeholder fallback={<Spinner />}>
+          <Location center={center} />
         </Placeholder>
         {hasGeo && <Map center={center} />}
       </Fragment>
