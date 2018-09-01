@@ -5,6 +5,8 @@ import {
   withGoogleMap,
   withScriptjs,
   InfoWindow,
+  OverlayView,
+  StreetViewPanorama,
 } from 'react-google-maps';
 import { withProps, compose, withStateHandlers } from 'recompose';
 
@@ -25,7 +27,27 @@ const Map = ({
       <Marker position={{ lat: 59.34, lng: 30.1 }} onClick={onToggleOpen}>
         {isOpen && (
           <InfoWindow onCloseClick={onToggleOpen}>
-            <p>this is a thing</p>
+            <StreetViewPanorama defualtProps={center} visible>
+              <OverlayView
+                position={{ lat: 59.34, lng: 30.2 }}
+                mapPaneName={OverlayView.OVERLAY_LAYER}
+                getPixelPositionOffset={(width, height) => ({
+                  x: -(width / 2),
+                  y: -(height / 2),
+                })}
+              >
+                <div
+                  style={{
+                    background: 'red',
+                    color: 'white',
+                    padding: 5,
+                    borderRadius: '50%',
+                  }}
+                >
+                  OverlayView
+                </div>
+              </OverlayView>
+            </StreetViewPanorama>
           </InfoWindow>
         )}
       </Marker>
