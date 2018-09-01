@@ -9,8 +9,7 @@ import {
   StreetViewPanorama,
 } from 'react-google-maps';
 import { withProps, compose, withStateHandlers } from 'recompose';
-
-const API_KEY = 'AIzaSyCoJc7_HdAr12c7DDQ1VRqdPWbFsJDJuww';
+import { API_KEY } from '../constant';
 
 const Map = ({
   center = { lat: 59.95, lng: 30.33 },
