@@ -1,4 +1,4 @@
-import React, { Component, Placeholder, Fragment } from 'react';
+import React, { Component, Placeholder } from 'react';
 import { createResource } from 'simple-cache-provider';
 
 import { getCurrentPosition } from './utils/geo';
@@ -36,15 +36,15 @@ class App extends Component {
   render() {
     const { center, hasGeo } = this.state;
     return (
-      <Fragment>
+      <>
         <Placeholder fallback={<Spinner size="large" />}>
           <SkrLoader />
         </Placeholder>
         <Placeholder fallback={<Spinner />}>
           <Location center={center} />
         </Placeholder>
-        {hasGeo && <Map center={center} />}
-      </Fragment>
+        {/* {hasGeo && <Map center={center} />} */}
+      </>
     );
   }
 }
