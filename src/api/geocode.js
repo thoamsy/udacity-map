@@ -21,15 +21,18 @@ export const getLocationWithLatLng = async ({ lat, lng }) => {
   }
 };
 
-export const getPlacesWithKeyword = async ({ lat, lng }) => {
+export const getPlacesWithKeyword = async ({ lat, lng, keyword }) => {
   if (!(lat && lng)) return;
   const location = `${lat},${lng}`;
-  const url = getAPIUrl({
+  const options = {
     category: 'place',
     action: 'nearbysearch',
-    location,
     radius: 10000,
-  });
+    language: 'zh-CN',
+    location,
+  };
+  keyword && (options.keyword = keyword);
+  const url = getAPIUrl(options);
   const res = await fetch(url, {
     mode: 'cors',
     headers: {

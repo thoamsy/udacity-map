@@ -10,9 +10,10 @@ import Spinner from './Spinner';
 
 const nearbyResource = createResource(
   getPlacesWithKeyword,
-  ({ lng, lat }) => lat + lng
+  ({ lng, lat, keyword }) => lat + lng + keyword
 );
-const getNearby = center => nearbyResource.read(cache, center);
+const getNearby = (center, keyword) =>
+  nearbyResource.read(cache, { keyword, ...center });
 
 const Place = styled.a.attrs({
   className: ({ isActive }) => (isActive ? 'is-active' : ''),
@@ -22,8 +23,8 @@ const Place = styled.a.attrs({
   }
 `;
 
-const PlaceList = ({ active, center }) => {
-  const res = getNearby(center);
+const PlaceList = ({ active, center, keyword }) => {
+  const res = getNearby(center, keyword);
   const places = res?.results || Array(20).fill('XXX');
   return (
     <ul className="menu-list">
@@ -53,12 +54,21 @@ PlaceList.propTypes = {
   ),
 };
 
-const Places = ({ labelName = '附近的地点', center, active, className }) => (
+const Places = ({
+  labelName = '附近的地点',
+  center,
+  active,
+  className,
+  searchValue,
+  keyword,
+  onChange,
+  onSubmit,
+}) => (
   <aside className={`menu has-background-dark ${className}`}>
-    <Search />
+    <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
     <p className="menu-label has-text-light">{labelName}</p>
     <Placeholder fallback={<Spinner />} timeout={1000}>
-      <PlaceList active={active} center={center} />
+      <PlaceList active={active} center={center} keyword={keyword} />
     </Placeholder>
   </aside>
 );
