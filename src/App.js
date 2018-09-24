@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
+import Map from './components/Map';
 
 class App extends Component {
   state = {
@@ -28,9 +29,7 @@ class App extends Component {
     return (
       <div className="columns container">
         <Aside center={center} className="column is-4 section" />
-        <main className="section column is-8">
-          <section className="section">test</section>
-        </main>
+        <main className="column is-8">{hasGeo && <Map center={center} />}</main>
       </div>
     );
   }

@@ -67,7 +67,7 @@ export default compose(
   ),
   withProps({
     containerElement: <div style={{ height: '100vh', width: '100%' }} />,
-    loadingElement: <div style={{ height: `100%` }} />,
+    loadingElement: <div style={{ height: '100%' }} />,
     mapElement: <div style={{ height: `100%` }} />,
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3`,
   }),

@@ -1,27 +1,11 @@
 import React from 'react';
-import styled from 'styled-components';
 
-const SearchInput = styled.input.attrs({
-  className: ({ inputing, loading }) => {
-    let names = '';
-    if (inputing) {
-      names += ' is-rounded';
-    }
-    if (loading) {
-      names += ' is-loading';
-    }
-    return names;
-  },
-  disabled: ({ initing }) => initing,
-})``;
-
-const Search = ({ value, onChange, onSubmit, initing }) => (
+const Search = ({ value, onChange, onSubmit }) => (
   <form onSubmit={onSubmit} className="form">
     <div className="field has-addons">
       <div className="control is-expanded">
-        <SearchInput
+        <input
           value={value}
-          initing={initing}
           onChange={onChange}
           type="text"
           className="input"
