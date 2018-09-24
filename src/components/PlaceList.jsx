@@ -15,7 +15,7 @@ const Place = styled.a.attrs({
   className: ({ isActive }) => (isActive ? 'is-active' : ''),
 })``;
 
-const PlaceList = ({ labelName = '地理位置', center, isActive }) => {
+const PlaceList = ({ labelName = '附近的地点', center, isActive }) => {
   const res = getNearby(center);
   const places = res?.results || [];
   return (
