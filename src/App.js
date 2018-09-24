@@ -26,9 +26,12 @@ class App extends Component {
   render() {
     const { center, hasGeo } = this.state;
     return (
-      <>
-        <Aside center={center} />
-      </>
+      <div className="columns container">
+        <Aside center={center} className="column is-4 section" />
+        <main className="section column is-8">
+          <section className="section">test</section>
+        </main>
+      </div>
     );
   }
 }

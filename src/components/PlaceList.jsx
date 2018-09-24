@@ -24,12 +24,15 @@ const Place = styled.a.attrs({
 
 const PlaceList = ({ active, center }) => {
   const res = getNearby(center);
-  const places = res?.results || [];
+  const places = res?.results || Array(20).fill('XXX');
   return (
     <ul className="menu-list">
-      {places.map(place => (
-        <li key={place.id}>
-          <Place isActive={active === place.id} className="has-text-light">
+      {places.map((place, i) => (
+        <li key={place.id ?? i}>
+          <Place
+            isActive={active === (place.id ?? i)}
+            className="has-text-light"
+          >
             {place.name}
           </Place>
         </li>
@@ -54,7 +57,7 @@ const Places = ({ labelName = '附近的地点', center, active, className }) =>
   <aside className={`menu has-background-dark ${className}`}>
     <Search />
     <p className="menu-label has-text-light">{labelName}</p>
-    <Placeholder fallback={<Spinner />}>
+    <Placeholder fallback={<Spinner />} timeout={1000}>
       <PlaceList active={active} center={center} />
     </Placeholder>
   </aside>
