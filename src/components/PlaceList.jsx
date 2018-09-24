@@ -2,6 +2,8 @@ import React, { Placeholder } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { createResource } from 'simple-cache-provider';
+
+import Search from './Search';
 import { cache } from '../cache';
 import { getPlacesWithKeyword } from '../api/geocode';
 import Spinner from './Spinner';
@@ -48,15 +50,14 @@ PlaceList.propTypes = {
   ),
 };
 
-const Places = ({ labelName = '附近的地点', center, active, className }) => {
-  return (
-    <aside className={`menu has-background-dark ${className}`}>
-      <p className="menu-label has-text-light">{labelName}</p>
-      <Placeholder fallback={<Spinner />}>
-        <PlaceList active={active} center={center} />
-      </Placeholder>
-    </aside>
-  );
-};
+const Places = ({ labelName = '附近的地点', center, active, className }) => (
+  <aside className={`menu has-background-dark ${className}`}>
+    <Search />
+    <p className="menu-label has-text-light">{labelName}</p>
+    <Placeholder fallback={<Spinner />}>
+      <PlaceList active={active} center={center} />
+    </Placeholder>
+  </aside>
+);
 
 export default Places;
