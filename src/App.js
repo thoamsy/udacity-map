@@ -1,9 +1,7 @@
 import React, { Component, Placeholder } from 'react';
 
 import { getCurrentPosition } from './utils/geo';
-import PlaceList from './components/PlaceList';
-import Map from './components/Map';
-import Spinner from './components/Spinner';
+import Aside from './container/Aside';
 
 class App extends Component {
   state = {
@@ -29,9 +27,7 @@ class App extends Component {
     const { center, hasGeo } = this.state;
     return (
       <>
-        <Placeholder fallback={<Spinner />}>
-          <PlaceList center={center} />
-        </Placeholder>
+        <Aside center={center} />
         {/* {hasGeo && <Map center={center} />} */}
       </>
     );
