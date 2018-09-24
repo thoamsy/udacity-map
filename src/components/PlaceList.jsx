@@ -42,9 +42,9 @@ PlaceList.propTypes = {
   ),
 };
 
-const Places = ({ labelName = '附近的地点', center, active }) => {
+const Places = ({ labelName = '附近的地点', center, active, className }) => {
   return (
-    <aside className="menu">
+    <aside className={`menu ${className}`}>
       <p className="menu-label">{labelName}</p>
       <Placeholder fallback={<Spinner />}>
         <PlaceList active={active} center={center} />
