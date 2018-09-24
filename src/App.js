@@ -2,9 +2,9 @@ import React, { Component, Placeholder } from 'react';
 import { createResource } from 'simple-cache-provider';
 
 import { getCurrentPosition } from './utils/geo';
+import PlaceList from './components/PlaceList';
 import Map from './components/Map';
 import Spinner from './components/Spinner';
-import Location from './components/Location';
 import { cache } from './cache';
 
 const SkrResource = createResource(() => import('./components/Skr'));
@@ -41,7 +41,7 @@ class App extends Component {
           <SkrLoader />
         </Placeholder>
         <Placeholder fallback={<Spinner />}>
-          <Location center={center} />
+          <PlaceList center={center} />
         </Placeholder>
         {/* {hasGeo && <Map center={center} />} */}
       </>
