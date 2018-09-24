@@ -14,7 +14,11 @@ const getNearby = center => nearbyResource.read(cache, center);
 
 const Place = styled.a.attrs({
   className: ({ isActive }) => (isActive ? 'is-active' : ''),
-})``;
+})`
+  &&&:hover {
+    background-color: #555;
+  }
+`;
 
 const PlaceList = ({ active, center }) => {
   const res = getNearby(center);
@@ -23,7 +27,9 @@ const PlaceList = ({ active, center }) => {
     <ul className="menu-list">
       {places.map(place => (
         <li key={place.id}>
-          <Place isActive={active === place.id}>{place.name}</Place>
+          <Place isActive={active === place.id} className="has-text-light">
+            {place.name}
+          </Place>
         </li>
       ))}
     </ul>
@@ -44,8 +50,8 @@ PlaceList.propTypes = {
 
 const Places = ({ labelName = '附近的地点', center, active, className }) => {
   return (
-    <aside className={`menu ${className}`}>
-      <p className="menu-label">{labelName}</p>
+    <aside className={`menu has-background-dark ${className}`}>
+      <p className="menu-label has-text-light">{labelName}</p>
       <Placeholder fallback={<Spinner />}>
         <PlaceList active={active} center={center} />
       </Placeholder>
