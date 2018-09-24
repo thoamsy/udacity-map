@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { Placeholder } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { createResource } from 'simple-cache-provider';
 import { cache } from '../cache';
 import { getPlacesWithKeyword } from '../api/geocode';
+import Spinner from './Spinner';
 
 const nearbyResource = createResource(
   getPlacesWithKeyword,
@@ -15,25 +16,22 @@ const Place = styled.a.attrs({
   className: ({ isActive }) => (isActive ? 'is-active' : ''),
 })``;
 
-const PlaceList = ({ labelName = '附近的地点', center, isActive }) => {
+const PlaceList = ({ active, center }) => {
   const res = getNearby(center);
   const places = res?.results || [];
   return (
-    <aside className="menu">
-      <p className="menu-label">{labelName}</p>
-      <ul className="menu-list">
-        {places.map(place => (
-          <li key={place.id}>
-            <Place className={isActive}>{place.name}</Place>
-          </li>
-        ))}
-      </ul>
-    </aside>
+    <ul className="menu-list">
+      {places.map(place => (
+        <li key={place.id}>
+          <Place isActive={active === place.id}>{place.name}</Place>
+        </li>
+      ))}
+    </ul>
   );
 };
 
 PlaceList.propTypes = {
-  labelName: PropTypes.string,
+  active: PropTypes.stirng,
   places: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
@@ -44,4 +42,15 @@ PlaceList.propTypes = {
   ),
 };
 
-export default PlaceList;
+const Places = ({ labelName = '附近的地点', center, active }) => {
+  return (
+    <aside className="menu">
+      <p className="menu-label">{labelName}</p>
+      <Placeholder fallback={<Spinner />}>
+        <PlaceList active={active} center={center} />
+      </Placeholder>
+    </aside>
+  );
+};
+
+export default Places;

@@ -1,4 +1,4 @@
-import React, { Component, Placeholder } from 'react';
+import React, { Component } from 'react';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
@@ -28,7 +28,6 @@ class App extends Component {
     return (
       <>
         <Aside center={center} />
-        {/* {hasGeo && <Map center={center} />} */}
       </>
     );
   }

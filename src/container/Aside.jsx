@@ -1,18 +1,10 @@
-import React, { Component, Placeholder } from 'react';
+import React, { Component } from 'react';
 
-import PlaceList from '../components/PlaceList';
-import Spinner from '../components/Spinner';
+import Places from '../components/PlaceList';
 
 export default class Aside extends Component {
   render() {
     const { center } = this.props;
-    return (
-      <>
-        <Placeholder fallback={<Spinner />}>
-          <PlaceList center={center} />
-        </Placeholder>
-        {/* {hasGeo && <Map center={center} />} */}
-      </>
-    );
+    return <Places center={center} />;
   }
 }
