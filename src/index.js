@@ -9,16 +9,16 @@ import { createCache, createResource } from 'simple-cache-provider';
 const cache = createCache();
 const sleep = (ms, value = Math.random()) =>
   new Promise(r => setTimeout(() => r(value), ms));
-const loadResource = id => sleep(2000, `${id}-value`);
+const loadResource = (id, a) => sleep(2000, `${id}-${a}-value`);
 const myResource = createResource(loadResource);
 
 const Loader = createResource(() => import('./Foo.js'));
 const Foo = () => {
   // preload 类似于针对 await 的优化
-  myResource.preload(cache, 'foo');
-  myResource.preload(cache, 'bar');
-  const foo = myResource.read(cache, 'foo');
-  const bar = myResource.read(cache, 'bar');
+  myResource.preload(cache, 'foo', 2);
+  myResource.preload(cache, 'bar', 2);
+  const foo = myResource.read(cache, 'foo', 2);
+  const bar = myResource.read(cache, 'bar', 2);
 
   // code splitting
   Loader.read(cache);
