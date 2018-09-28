@@ -12,7 +12,7 @@ const sleep = (ms, value = Math.random()) =>
 const loadResource = (id, a) => sleep(2000, `${id}-${a}-value`);
 const myResource = createResource(loadResource);
 
-const Loader = createResource(() => import('./Foo.js'));
+const Loader = createResource(() => import('./Foo.jsx'));
 const Foo = () => {
   // preload 类似于针对 await 的优化
   myResource.preload(cache, 'foo', 2);
@@ -21,11 +21,12 @@ const Foo = () => {
   const bar = myResource.read(cache, 'bar', 2);
 
   // code splitting
-  Loader.read(cache);
+  const C = Loader.read(cache).default;
   return (
     <>
       <div>{foo}</div>
       <div>{bar}</div>
+      <C />
     </>
   );
 };
