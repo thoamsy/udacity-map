@@ -2,11 +2,39 @@ import React, { Placeholder } from 'react';
 import ReactDOM from 'react-dom';
 import 'bulma/css/bulma.min.css';
 
-import { createCache, createResource } from 'simple-cache-provider';
+const createResource = loader => {
+  const resource = {
+    read(cache, key) {
+      return cache.read(resource, key, loader);
+    },
+    preload(cache, key) {
+      return cache.preload(resource, key, loader);
+    },
+  };
+  return resource;
+};
+const cache = {
+  $$typeof: 0xcac4e,
+  map: new Map(),
+  read(resource, hashedKey, loadResource) {
+    if (cache.map.has(hashedKey)) {
+      return cache.map.get(hashedKey);
+    }
+    const suspense = loadResource(hashedKey);
+    suspense.then(thing => {
+      cache.map.set(hashedKey, thing);
+      return thing;
+    });
+    throw suspense;
+  },
+  preload(resource, hashedKey, loadResource) {
+    return loadResource(hashedKey).then(thing => {
+      cache.map.set(hashedKey, thing);
+      return thing;
+    });
+  },
+};
 
-// import App from './App';
-
-const cache = createCache();
 const sleep = (ms, value = Math.random()) =>
   new Promise(r => setTimeout(() => r(value), ms));
 const loadResource = (id, a) => sleep(2000, `${id}-${a}-value`);
@@ -15,10 +43,11 @@ const myResource = createResource(loadResource);
 const Loader = createResource(() => import('./Foo.jsx'));
 const Foo = () => {
   // preload 类似于针对 await 的优化
-  myResource.preload(cache, 'foo', 2);
-  myResource.preload(cache, 'bar', 2);
-  const foo = myResource.read(cache, 'foo', 2);
-  const bar = myResource.read(cache, 'bar', 2);
+  myResource.preload(cache, 'foo');
+  myResource.preload(cache, 'bar');
+  debugger;
+  const foo = myResource.read(cache, 'foo');
+  const bar = myResource.read(cache, 'bar');
 
   // code splitting
   const C = Loader.read(cache).default;
