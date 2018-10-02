@@ -42,7 +42,6 @@ const PlaceList = ({ active, center, keyword }) => {
 };
 
 PlaceList.propTypes = {
-  active: PropTypes.stirng,
   places: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string,
@@ -56,7 +55,6 @@ PlaceList.propTypes = {
 const Places = ({
   labelName = '附近的地点',
   center,
-  active,
   className,
   searchValue,
   keyword,
@@ -67,7 +65,7 @@ const Places = ({
     <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
     <p className="menu-label has-text-light">{labelName}</p>
     <Placeholder fallback={<Spinner />} timeout={1000}>
-      <PlaceList active={active} center={center} keyword={keyword} />
+      <PlaceList center={center} keyword={keyword} />
     </Placeholder>
   </aside>
 );
