@@ -1,13 +1,28 @@
 import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
-import styled from 'styled-components';
+import styled, { keyframes, css } from 'styled-components';
 
 const classMap = {
   success: 'is-success',
   danger: 'is-danger',
   warning: 'is-warning',
 };
+
+const fadeIn = keyframes`
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+
+  100% {
+    opacity; 1;
+    transform: translateX(0);
+  }
+`;
+const fadeInRule = css`
+  ${fadeIn} 0.5s;
+`;
 
 const NotificationContainer = styled.article.attrs({
   className: props => `message ${classMap[props.type]}`,
@@ -19,6 +34,7 @@ const NotificationContainer = styled.article.attrs({
   transition: all 0.5s ease-out;
   opacity: ${({ isShow }) => +isShow};
   transform: ${props => `translateX(${props.isShow ? 0 : '100%'})`};
+  animation: ${fadeInRule};
 `;
 
 class Notification extends Component {
