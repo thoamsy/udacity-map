@@ -10,7 +10,6 @@ const AsideContainer = styled.section`
   top: 0;
   right: 0;
   z-index: 20;
-  transition: transform 0.5s ease-out;
   transform: translateX(-100%);
 `;
 
