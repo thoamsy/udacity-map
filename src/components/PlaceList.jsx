@@ -1,10 +1,9 @@
 import React, { Placeholder } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
-import { createResource } from 'simple-cache-provider';
 
 import Search from './Search';
-import { cache } from '../cache';
+import { createResource } from '../cache';
 import { getPlacesWithKeyword } from '../api/geocode';
 import Spinner from './Spinner';
 
@@ -13,7 +12,7 @@ const nearbyResource = createResource(
   ({ lng, lat, keyword }) => lat + lng + keyword
 );
 const getNearby = (center, keyword) =>
-  nearbyResource.read(cache, { keyword, ...center });
+  nearbyResource.read({ keyword, ...center });
 
 const Place = styled.a.attrs({
   className: ({ isActive }) => (isActive ? 'is-active' : ''),

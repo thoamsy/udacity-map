@@ -1,9 +1,13 @@
-import { createCache } from 'simple-cache-provider';
+import * as api from 'simple-cache-provider';
 
-export let cache;
+const cache = api.createCache();
 
-function initCache() {
-  cache = createCache(initCache);
-}
+const createResource = (loader, hash = x => x) => {
+  const resource = api.createResource(loader, hash);
+  const { read, preload } = resource;
+  resource.read = key => read(cache, key);
+  resource.preload = key => preload(cache, key);
+  return resource;
+};
 
-initCache();
+export { createResource, cache };
