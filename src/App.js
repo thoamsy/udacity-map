@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { update } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
 import Map from './components/Map';
+import Navbar from './components/Navbar';
 
 class App extends Component {
   state = {
@@ -10,8 +12,15 @@ class App extends Component {
       lat: '',
       lng: '',
     },
+
     hasGeo: false,
+    hasExpanded: false,
   };
+
+  onBurgerClick = () => {
+    this.setState(update('hasExpanded', x => !x));
+  };
+
   async componentDidMount() {
     const { coords } = await getCurrentPosition();
     const center = {
@@ -25,10 +34,12 @@ class App extends Component {
   }
 
   render() {
-    const { center, hasGeo } = this.state;
+    const { center, hasGeo, hasExpanded } = this.state;
     return (
       <div className="columns container">
-        <Aside center={center} className="column is-4 section" />
+        <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded}>
+          <Aside center={center} className="section" />
+        </Navbar>
         <main className="column is-8">{hasGeo && <Map center={center} />}</main>
       </div>
     );
