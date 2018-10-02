@@ -1,4 +1,4 @@
-import React, { Component, createRef } from 'react';
+import React, { Component } from 'react';
 import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
@@ -16,9 +16,9 @@ const NotificationContainer = styled.article.attrs({
   right: 0;
   top: 66px;
   z-index: 1024;
-  transition: all 0.6s;
-  opacity: ${props => +props.isShow};
-  transform: ${props => `transform(${props.isShow ? 0 : '100%'})`};
+  transition: all 0.6s ease-out;
+  opacity: ${({ isShow }) => +isShow};
+  transform: ${props => `translateX(${props.isShow ? 0 : '100%'})`};
 `;
 
 class Notification extends Component {
@@ -30,16 +30,11 @@ class Notification extends Component {
     this.container = document.querySelector('#notification');
     this.ele = document.createElement('div');
     this.container.appendChild(this.ele);
-    this.notification = createRef();
   }
 
   removeNotification = () => this.container.removeChild(this.ele);
   componentDidMount = () => {
     const { timeout } = this.props;
-    this.notification.current.addEventListener(
-      'transitionend',
-      this.removeNotification
-    );
 
     setTimeout(() => {
       this.setState({
@@ -72,7 +67,7 @@ class Notification extends Component {
       <NotificationContainer
         isShow={!this.state.needToClose}
         type={type}
-        ref={this.notification}
+        onTransitionEnd={this.removeNotification}
       >
         <div className="message-body">
           {onClose && <button className="delete" onClick={onClose} />}
