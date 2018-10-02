@@ -28,7 +28,7 @@ const rotator = keyframes`
   }
 `;
 const rotatorRule = css`
-  ${rotator} 1.4s linear infinite;
+  ${rotator} 1.3s linear infinite;
 `;
 
 const colors = keyframes`
@@ -51,12 +51,11 @@ const circleRules = Object.entries(DASHS).reduce((result, [size, offset]) => {
  }
 `;
   result[size] = css`
- ${rule} 1.4s ease-in-out infinite,
-  ${colors} 5.6s ease-in-out infinite;
+ ${rule} 1.3s ease-in-out infinite,
+  ${colors} 5.2s ease-in-out infinite;
     `;
   return result;
 }, {});
-console.log(circleRules);
 
 const centerRule = css`
   position: fixed;

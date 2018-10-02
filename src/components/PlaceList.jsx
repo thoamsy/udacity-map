@@ -64,7 +64,7 @@ const Places = ({
   <aside className={`menu has-background-dark ${className}`}>
     <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
     <p className="menu-label has-text-light">{labelName}</p>
-    <Placeholder fallback={<Spinner />} timeout={1000}>
+    <Placeholder fallback={<Spinner />} delayMs={1000}>
       <PlaceList center={center} keyword={keyword} />
     </Placeholder>
   </aside>

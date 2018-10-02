@@ -25,6 +25,7 @@ export default class Aside extends Component {
       keyword: this.state.searchValue,
     });
   };
+
   onChange = ({ target }) => {
     this.setState({
       searchValue: target.value,
