@@ -6,6 +6,7 @@ import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
 import Map from './components/Map';
 import Navbar from './components/Navbar';
+import Notification from './components/Notification';
 
 const TransformContainer = styled.div`
   transition: transform 0.5s ease-out;
@@ -24,7 +25,6 @@ class App extends Component {
   };
 
   onBurgerClick = () => {
-    console.log('skr');
     this.setState(update('hasExpanded', x => !x));
   };
 
@@ -44,10 +44,11 @@ class App extends Component {
     const { center, hasGeo, hasExpanded } = this.state;
     return (
       <TransformContainer hasExpanded={hasExpanded}>
+        <Notification type="danger">234234</Notification>
         <Aside center={center} className="section" hasExpanded={hasExpanded} />
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-          {hasGeo && <Map center={center} />}
+          {/* {hasGeo && <Map center={center} />} */}
         </main>
       </TransformContainer>
     );

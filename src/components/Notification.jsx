@@ -16,7 +16,7 @@ const NotificationContainer = styled.article.attrs({
   right: 0;
   top: 66px;
   z-index: 1024;
-  transition: all 0.6s ease-out;
+  transition: all 0.5s ease-out;
   opacity: ${({ isShow }) => +isShow};
   transform: ${props => `translateX(${props.isShow ? 0 : '100%'})`};
 `;
@@ -28,12 +28,15 @@ class Notification extends Component {
       needToClose: false,
     };
     this.container = document.querySelector('#notification');
+    this.createDom();
+  }
+
+  createDom() {
     this.ele = document.createElement('div');
     this.container.appendChild(this.ele);
   }
 
-  removeNotification = () => this.container.removeChild(this.ele);
-  componentDidMount = () => {
+  autoClose() {
     const { timeout } = this.props;
 
     setTimeout(() => {
@@ -41,7 +44,22 @@ class Notification extends Component {
         needToClose: true,
       });
     }, timeout);
+  }
+
+  removeNotification = () => this.container.removeChild(this.ele);
+  componentDidMount = () => {
+    this.autoClose();
   };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.children !== prevProps.children) {
+      this.createDom();
+      this.autoClose();
+      this.setState({
+        needToClose: false,
+      });
+    }
+  }
 
   componentWillUnmount() {
     this.container.removeChild(this.ele);
