@@ -1,10 +1,16 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import { update } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
 import Map from './components/Map';
 import Navbar from './components/Navbar';
+
+const MainContainer = styled.main`
+  transition: transform 0.5s ease-out;
+  transform: ${({ hasExpanded }) => `translateX(${hasExpanded ? '400px' : 0})`};
+`;
 
 class App extends Component {
   state = {
@@ -18,6 +24,7 @@ class App extends Component {
   };
 
   onBurgerClick = () => {
+    console.log('skr');
     this.setState(update('hasExpanded', x => !x));
   };
 
@@ -36,12 +43,13 @@ class App extends Component {
   render() {
     const { center, hasGeo, hasExpanded } = this.state;
     return (
-      <div className="columns container">
-        <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded}>
-          <Aside center={center} className="section" />
-        </Navbar>
-        <main className="column is-8">{hasGeo && <Map center={center} />}</main>
-      </div>
+      <>
+        <Aside center={center} className="section" hasExpanded={hasExpanded} />
+        <MainContainer hasExpanded={hasExpanded}>
+          <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
+          {hasGeo && <Map center={center} />}
+        </MainContainer>
+      </>
     );
   }
 }
