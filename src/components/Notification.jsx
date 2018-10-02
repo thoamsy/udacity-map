@@ -30,6 +30,7 @@ const NotificationContainer = styled.article.attrs({
   position: fixed;
   right: 0;
   top: 66px;
+  min-width: 200px;
   z-index: 1024;
   transition: all 0.5s ease-out;
   opacity: ${({ isShow }) => +isShow};
