@@ -7,7 +7,7 @@ import Aside from './container/Aside';
 import Map from './components/Map';
 import Navbar from './components/Navbar';
 
-const MainContainer = styled.main`
+const TransformContainer = styled.div`
   transition: transform 0.5s ease-out;
   transform: ${({ hasExpanded }) => `translateX(${hasExpanded ? '400px' : 0})`};
 `;
@@ -43,13 +43,13 @@ class App extends Component {
   render() {
     const { center, hasGeo, hasExpanded } = this.state;
     return (
-      <>
+      <TransformContainer hasExpanded={hasExpanded}>
         <Aside center={center} className="section" hasExpanded={hasExpanded} />
-        <MainContainer hasExpanded={hasExpanded}>
+        <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
           {hasGeo && <Map center={center} />}
-        </MainContainer>
-      </>
+        </main>
+      </TransformContainer>
     );
   }
 }

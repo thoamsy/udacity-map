@@ -11,7 +11,7 @@ const AsideContainer = styled.section`
   right: 0;
   z-index: 20;
   transition: transform 0.5s ease-out;
-  transform: ${({ hasExpanded }) => `translateX(${hasExpanded ? 0 : '-100%'})`};
+  transform: translateX(-100%);
 `;
 
 export default class Aside extends Component {
