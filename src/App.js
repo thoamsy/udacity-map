@@ -9,6 +9,7 @@ import Navbar from './components/Navbar';
 import Notification from './components/Notification';
 
 const TransformContainer = styled.div`
+  will-change: transform;
   transition: transform 0.3s ease-out;
   transform: ${({ hasExpanded }) => `translateX(${hasExpanded ? '400px' : 0})`};
 `;

@@ -1,4 +1,4 @@
-import * as api from 'simple-cache-provider';
+import * as api from 'react-cache';
 
 const cache = api.createCache();
 
