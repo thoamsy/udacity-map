@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+import memoize from 'memoize-one';
 import { update, set, map } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
@@ -50,10 +51,9 @@ class App extends Component {
     this.setState(set(`placelist`, placelist));
   };
 
-  get locationOfMakers() {
-    const a = map('geometry.location', this.state.placelist);
-    console.log(a);
-    return a;
+  pluckPosition = memoize(map('geometry.location'));
+  get locationOfMarkers() {
+    return this.pluckPosition(this.state.placelist);
   }
 
   render() {
@@ -69,7 +69,7 @@ class App extends Component {
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
           {hasGeo && (
-            <Map center={center} locationOfMakers={this.locationOfMakers} />
+            <Map center={center} locationOfMarkers={this.locationOfMarkers} />
           )}
         </main>
       </TransformContainer>
