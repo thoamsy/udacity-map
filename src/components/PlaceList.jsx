@@ -22,10 +22,9 @@ const Place = styled.a.attrs({
   }
 `;
 
-const PlaceList = ({ active, center, keyword, getPlaceList }) => {
+const PlaceList = ({ active, center, keyword }) => {
   const res = getNearby(center, keyword);
-  const places = res?.results ?? [];
-  getPlaceList(places);
+  const places = res?.results || Array(20).fill('XXX');
   return (
     <ul className="menu-list">
       {places.map((place, i) => (
@@ -60,31 +59,14 @@ const Places = ({
   keyword,
   onChange,
   onSubmit,
-  getPlaceList,
 }) => (
   <aside className="menu has-background-dark section">
     <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
     <p className="menu-label has-text-light">{labelName}</p>
     <Placeholder fallback={<Spinner />} delayMs={1000}>
-      <PlaceList
-        center={center}
-        keyword={keyword}
-        getPlaceList={getPlaceList}
-      />
+      <PlaceList center={center} keyword={keyword} />
     </Placeholder>
   </aside>
 );
-
-Places.propTypes = {
-  labelName: PropTypes.string,
-  center: PropTypes.shape({
-    lng: PropTypes.number,
-    lat: PropTypes.number,
-  }).isRequired,
-  searchValue: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  getPlaceList: PropTypes.func.isRequired,
-};
 
 export default Places;

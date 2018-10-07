@@ -14,25 +14,34 @@ const AsideContainer = styled.section`
 `;
 
 export default class Aside extends Component {
+  state = {
+    searchValue: '',
+    keyword: '',
+  };
+
+  onSubmit = event => {
+    event.preventDefault();
+    this.setState({
+      keyword: this.state.searchValue,
+    });
+  };
+
+  onChange = ({ target }) => {
+    this.setState({
+      searchValue: target.value,
+    });
+  };
+
   render() {
-    const {
-      center,
-      hasExpanded,
-      getPlaceList,
-      onSubmit,
-      onChange,
-      keyword,
-      searchValue,
-    } = this.props;
+    const { center, hasExpanded } = this.props;
     return (
       <AsideContainer hasExpanded={hasExpanded}>
         <Places
           center={center}
-          onChange={onChange}
-          onSubmit={onSubmit}
-          keyword={keyword}
-          value={searchValue}
-          getPlaceList={getPlaceList}
+          onChange={this.onChange}
+          onSubmit={this.onSubmit}
+          keyword={this.state.keyword}
+          value={this.state.searchValue}
         />
       </AsideContainer>
     );

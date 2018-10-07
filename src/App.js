@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { update, set, map } from 'lodash/fp';
+import { update, set } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
@@ -27,21 +27,6 @@ class App extends Component {
     hasGeo: false,
     hasExpanded: false,
     notification: '',
-    searchValue: '',
-    keyword: '',
-  };
-
-  onSubmit = event => {
-    event.preventDefault();
-    this.setState({
-      keyword: this.state.searchValue,
-    });
-  };
-
-  onChange = ({ target }) => {
-    this.setState({
-      searchValue: target.value,
-    });
   };
 
   onBurgerClick = () => {
@@ -60,41 +45,17 @@ class App extends Component {
     });
   }
 
-  getPlaceList = placelist => {
-    const { keyword, placeListMap } = this.state;
-    if (placeListMap[keyword] || !placelist?.length) return;
+  getPlaceList(placelist, keyword) {
+    if (this.state.placeListMap[keyword]) return;
     this.setState(set(`placeListMap.${keyword}`, placelist));
-  };
-
-  get locationOfMarkers() {
-    return map(
-      'geometry.location',
-      this.state.placeListMap[this.state.keyword]
-    );
   }
 
   render() {
-    const {
-      center,
-      hasGeo,
-      hasExpanded,
-      notification,
-      searchValue,
-      keyword,
-    } = this.state;
+    const { center, hasGeo, hasExpanded, notification } = this.state;
     return (
       <TransformContainer hasExpanded={hasExpanded}>
         <Notification type="danger">{notification}</Notification>
-        <Aside
-          center={center}
-          hasExpanded={hasExpanded}
-          getPlaceList={this.getPlaceList}
-          onSubmit={this.onSubmit}
-          onChange={this.onChange}
-          onBurgerClick={this.onBurgerClick}
-          searchValue={searchValue}
-          keyword={keyword}
-        />
+        <Aside center={center} hasExpanded={hasExpanded} />
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
           {hasGeo && <Map center={center} />}
