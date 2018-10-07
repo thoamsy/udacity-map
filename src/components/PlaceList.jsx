@@ -79,8 +79,8 @@ const Places = ({
 Places.propTypes = {
   labelName: PropTypes.string,
   center: PropTypes.shape({
-    lng: PropTypes.number,
-    lat: PropTypes.number,
+    lng: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+    lat: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }).isRequired,
   searchValue: PropTypes.string,
   onChange: PropTypes.func.isRequired,
