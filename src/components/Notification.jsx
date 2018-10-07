@@ -98,6 +98,7 @@ class Notification extends Component {
 
   renderNotification() {
     const { type, onClose, children } = this.props;
+    if (!children) return null;
     return (
       <NotificationContainer
         isShow={!this.state.needToClose}
