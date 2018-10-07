@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { update, set } from 'lodash/fp';
+import { update, set, map } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
@@ -23,7 +23,7 @@ class App extends Component {
       lat: '',
       lng: '',
     },
-    placeListMap: {},
+    placelist: [],
     hasGeo: false,
     hasExpanded: false,
     notification: '',
@@ -45,9 +45,15 @@ class App extends Component {
     });
   }
 
-  getPlaceList(placelist, keyword) {
-    if (this.state.placeListMap[keyword]) return;
-    this.setState(set(`placeListMap.${keyword}`, placelist));
+  getPlacelist = placelist => {
+    if (!placelist?.length || this.state.placelist === placelist) return;
+    this.setState(set(`placelist`, placelist));
+  };
+
+  get locationOfMakers() {
+    const a = map('geometry.location', this.state.placelist);
+    console.log(a);
+    return a;
   }
 
   render() {
@@ -55,10 +61,16 @@ class App extends Component {
     return (
       <TransformContainer hasExpanded={hasExpanded}>
         <Notification type="danger">{notification}</Notification>
-        <Aside center={center} hasExpanded={hasExpanded} />
+        <Aside
+          center={center}
+          hasExpanded={hasExpanded}
+          getPlacelist={this.getPlacelist}
+        />
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-          {hasGeo && <Map center={center} />}
+          {hasGeo && (
+            <Map center={center} locationOfMakers={this.locationOfMakers} />
+          )}
         </main>
       </TransformContainer>
     );

@@ -16,6 +16,7 @@ const Map = ({
   zoom = 13,
   isOpen,
   onToggleOpen,
+  locationOfMarkers = [],
 }) => (
   <div style={{ height: '100vh', width: '100%' }}>
     <GoogleMap
@@ -23,33 +24,39 @@ const Map = ({
       defaultCenter={center}
       defaultZoom={zoom}
     >
-      <Marker position={{ lat: 59.34, lng: 30.1 }} onClick={onToggleOpen}>
-        {isOpen && (
-          <InfoWindow onCloseClick={onToggleOpen}>
-            <StreetViewPanorama defualtProps={center} visible>
-              <OverlayView
-                position={{ lat: 59.34, lng: 30.2 }}
-                mapPaneName={OverlayView.OVERLAY_LAYER}
-                getPixelPositionOffset={(width, height) => ({
-                  x: -(width / 2),
-                  y: -(height / 2),
-                })}
-              >
-                <div
-                  style={{
-                    background: 'red',
-                    color: 'white',
-                    padding: 5,
-                    borderRadius: '50%',
-                  }}
+      {locationOfMarkers.map(location => (
+        <Marker
+          position={location}
+          onClick={onToggleOpen}
+          key={location.lng + location.lat}
+        >
+          {isOpen && (
+            <InfoWindow onCloseClick={onToggleOpen}>
+              <StreetViewPanorama defualtProps={center} visible>
+                <OverlayView
+                  position={location}
+                  mapPaneName={OverlayView.OVERLAY_LAYER}
+                  getPixelPositionOffset={(width, height) => ({
+                    x: -(width / 2),
+                    y: -(height / 2),
+                  })}
                 >
-                  OverlayView
-                </div>
-              </OverlayView>
-            </StreetViewPanorama>
-          </InfoWindow>
-        )}
-      </Marker>
+                  <div
+                    style={{
+                      background: 'red',
+                      color: 'white',
+                      padding: 5,
+                      borderRadius: '50%',
+                    }}
+                  >
+                    OverlayView
+                  </div>
+                </OverlayView>
+              </StreetViewPanorama>
+            </InfoWindow>
+          )}
+        </Marker>
+      ))}
     </GoogleMap>
   </div>
 );

@@ -33,10 +33,11 @@ export default class Aside extends Component {
   };
 
   render() {
-    const { center, hasExpanded } = this.props;
+    const { center, hasExpanded, getPlacelist } = this.props;
     return (
       <AsideContainer hasExpanded={hasExpanded}>
         <Places
+          getPlacelist={getPlacelist}
           center={center}
           onChange={this.onChange}
           onSubmit={this.onSubmit}
