@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
-import { update, set, map } from 'lodash/fp';
+import { update, set, map, pick } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
@@ -51,7 +51,7 @@ class App extends Component {
     this.setState(set(`placelist`, placelist));
   };
 
-  pluckPosition = memoize(map('geometry.location'));
+  pluckPosition = memoize(map(pick(['geometry.location', 'name', 'id'])));
   get locationOfMarkers() {
     return this.pluckPosition(this.state.placelist);
   }

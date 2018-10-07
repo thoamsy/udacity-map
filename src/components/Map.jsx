@@ -6,7 +6,6 @@ import {
   withScriptjs,
   InfoWindow,
   OverlayView,
-  StreetViewPanorama,
 } from 'react-google-maps';
 import { withProps, compose, withStateHandlers } from 'recompose';
 import { API_KEY } from '../constant';
@@ -23,35 +22,34 @@ const Map = ({
     defaultCenter={center}
     defaultZoom={zoom}
   >
-    {locationOfMarkers.map(location => (
+    {locationOfMarkers.map(({ geometry, id, name }) => (
       <Marker
-        position={location}
+        position={geometry.location}
         onClick={onToggleOpen}
-        key={'' + location.lat + location.lng}
+        key={id}
+        title={name}
       >
         {isOpen && (
           <InfoWindow onCloseClick={onToggleOpen}>
-            <StreetViewPanorama defualtProps={center} visible>
-              <OverlayView
-                position={location}
-                mapPaneName={OverlayView.OVERLAY_LAYER}
-                getPixelPositionOffset={(width, height) => ({
-                  x: -(width / 2),
-                  y: -(height / 2),
-                })}
+            <OverlayView
+              position={geometry.location}
+              mapPaneName={OverlayView.OVERLAY_LAYER}
+              getPixelPositionOffset={(width, height) => ({
+                x: -(width / 2),
+                y: -(height / 2),
+              })}
+            >
+              <div
+                style={{
+                  background: 'red',
+                  color: 'white',
+                  padding: 5,
+                  borderRadius: '50%',
+                }}
               >
-                <div
-                  style={{
-                    background: 'red',
-                    color: 'white',
-                    padding: 5,
-                    borderRadius: '50%',
-                  }}
-                >
-                  OverlayView
-                </div>
-              </OverlayView>
-            </StreetViewPanorama>
+                OverlayView
+              </div>
+            </OverlayView>
           </InfoWindow>
         )}
       </Marker>
