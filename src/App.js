@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
-import { update } from 'lodash/fp';
+import { update, set } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Aside from './container/Aside';
@@ -8,10 +8,13 @@ import Map from './components/Map';
 import Navbar from './components/Navbar';
 import Notification from './components/Notification';
 
-const TransformContainer = styled.div`
+const TransformContainer = styled.div.attrs({
+  style: props => ({
+    transform: `translateX(${props.hasExpanded ? '400px' : 0})`,
+  }),
+})`
   will-change: transform;
   transition: transform 0.3s ease-out;
-  transform: ${({ hasExpanded }) => `translateX(${hasExpanded ? '400px' : 0})`};
 `;
 
 class App extends Component {
@@ -20,9 +23,10 @@ class App extends Component {
       lat: '',
       lng: '',
     },
-
+    placeListMap: {},
     hasGeo: false,
     hasExpanded: false,
+    notification: '',
   };
 
   onBurgerClick = () => {
@@ -41,15 +45,20 @@ class App extends Component {
     });
   }
 
+  getPlaceList(placelist, keyword) {
+    if (this.state.placeListMap[keyword]) return;
+    this.setState(set(`placeListMap.${keyword}`, placelist));
+  }
+
   render() {
-    const { center, hasGeo, hasExpanded } = this.state;
+    const { center, hasGeo, hasExpanded, notification } = this.state;
     return (
       <TransformContainer hasExpanded={hasExpanded}>
-        <Notification type="danger">234234</Notification>
-        <Aside center={center} className="section" hasExpanded={hasExpanded} />
+        <Notification type="danger">{notification}</Notification>
+        <Aside center={center} hasExpanded={hasExpanded} />
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-          {/* {hasGeo && <Map center={center} />} */}
+          {hasGeo && <Map center={center} />}
         </main>
       </TransformContainer>
     );
