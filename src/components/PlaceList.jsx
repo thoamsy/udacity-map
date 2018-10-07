@@ -55,13 +55,12 @@ PlaceList.propTypes = {
 const Places = ({
   labelName = '附近的地点',
   center,
-  className,
   searchValue,
   keyword,
   onChange,
   onSubmit,
 }) => (
-  <aside className={`menu has-background-dark ${className}`}>
+  <aside className="menu has-background-dark section">
     <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
     <p className="menu-label has-text-light">{labelName}</p>
     <Placeholder fallback={<Spinner />} delayMs={1000}>
