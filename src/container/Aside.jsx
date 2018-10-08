@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import styled from 'styled-components';
 
 import Places from '../components/PlaceList';
@@ -13,7 +13,7 @@ const AsideContainer = styled.section`
   transform: translateX(-100%);
 `;
 
-export default class Aside extends Component {
+export default class Aside extends PureComponent {
   state = {
     searchValue: '',
     keyword: '',
