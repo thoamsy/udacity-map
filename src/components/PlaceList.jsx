@@ -10,7 +10,7 @@ import Spinner from './Spinner';
 
 const nearbyResource = createResource(
   getPlacesWithKeyword,
-  ({ lng, lat, keyword }) => lat + lng + keyword
+  ({ lng, lat, keyword }) => '' + lat + lng + keyword
 );
 const getNearby = (center, keyword) =>
   nearbyResource.read({ keyword, ...center });

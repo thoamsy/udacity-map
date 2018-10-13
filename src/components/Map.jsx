@@ -1,20 +1,37 @@
-import React from 'react';
+import React, { Placeholder } from 'react';
+import { update } from 'lodash/fp';
 import {
   GoogleMap,
   Marker,
   withGoogleMap,
   withScriptjs,
   InfoWindow,
-  OverlayView,
 } from 'react-google-maps';
-import { withProps, compose, withStateHandlers, lifecycle } from 'recompose';
-import { API_KEY } from '../constant';
+import { withProps, compose, withStateHandlers } from 'recompose';
+import Spinner from './Spinner';
 
+import { API_KEY } from '../constant';
+import weather from '../api/weather';
+import { createResource } from '../cache';
+
+const weatherResouce = createResource(
+  weather,
+  ({ lng, lat }) => '' + lng + lat
+);
+
+const MarkInfo = ({ center }) => {
+  const weather = weatherResouce.read(center);
+  return (
+    <div>
+      <p>{weather.daily.summary}</p>
+    </div>
+  );
+};
 const Map = ({
   center,
   mapCenter,
   zoom = 12,
-  isOpen,
+  openStatus,
   onToggleOpen,
   locationOfMarkers = [],
   markerAnimation,
@@ -27,32 +44,16 @@ const Map = ({
     {locationOfMarkers.map(({ geometry, id, name }, i) => (
       <Marker
         position={geometry.location}
-        onClick={onToggleOpen}
+        onClick={() => onToggleOpen(id)}
         key={id}
         animation={markerAnimation[i] ?? google.maps.Animation.DROP}
         title={name}
       >
-        {isOpen && (
-          <InfoWindow onCloseClick={onToggleOpen}>
-            <OverlayView
-              position={geometry.location}
-              mapPaneName={OverlayView.OVERLAY_LAYER}
-              getPixelPositionOffset={(width, height) => ({
-                x: -(width / 2),
-                y: -(height / 2),
-              })}
-            >
-              <div
-                style={{
-                  background: 'red',
-                  color: 'white',
-                  padding: 5,
-                  borderRadius: '50%',
-                }}
-              >
-                OverlayView
-              </div>
-            </OverlayView>
+        {openStatus[id] && (
+          <InfoWindow onCloseClick={() => onToggleOpen(id)}>
+            <Placeholder delayMs={300} fallback={<Spinner size="small" />}>
+              <MarkInfo center={geometry.location} />
+            </Placeholder>
           </InfoWindow>
         )}
       </Marker>
@@ -61,22 +62,14 @@ const Map = ({
 );
 
 export default compose(
-  lifecycle({
-    componentDidUpdate(prevProps) {
-      if (this.props.center !== prevProps.center) {
-        console.log(111);
-        this.props.clearMapCenter();
-      }
-    },
-  }),
   withStateHandlers(
-    props => ({
-      isOpen: false,
-      markerAnimation: [],
-    }),
     {
-      onToggleOpen: ({ isOpen }) => () => {
-        return { isOpen: !isOpen };
+      openStatus: {},
+      markerAnimation: {},
+    },
+    {
+      onToggleOpen: state => id => {
+        return update(`openStatus.${id}`, x => !x, state);
       },
     }
   ),

@@ -33,6 +33,12 @@ class App extends Component {
     mapCenter: null,
   };
 
+  static getDerivedStateFromError(error) {
+    return {
+      error,
+    };
+  }
+
   onBurgerClick = () => {
     this.setState(update('hasExpanded', x => !x));
   };
