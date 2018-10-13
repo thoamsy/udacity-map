@@ -7,11 +7,12 @@ import {
   InfoWindow,
   OverlayView,
 } from 'react-google-maps';
-import { withProps, compose, withStateHandlers } from 'recompose';
+import { withProps, compose, withStateHandlers, lifecycle } from 'recompose';
 import { API_KEY } from '../constant';
 
 const Map = ({
-  center = { lat: 59.95, lng: 30.33 },
+  center,
+  mapCenter,
   zoom = 13,
   isOpen,
   onToggleOpen,
@@ -20,8 +21,9 @@ const Map = ({
 }) => (
   <GoogleMap
     bootstrapURLKeys={{ key: API_KEY }}
-    defaultCenter={center}
-    defaultZoom={zoom}
+    defaultZoom={13}
+    zoom={zoom}
+    center={mapCenter ?? center}
   >
     {locationOfMarkers.map(({ geometry, id, name }, i) => (
       <Marker
@@ -60,6 +62,14 @@ const Map = ({
 );
 
 export default compose(
+  lifecycle({
+    componentDidUpdate(prevProps) {
+      if (this.props.center !== prevProps.center) {
+        console.log(111);
+        this.props.clearMapCenter();
+      }
+    },
+  }),
   withStateHandlers(
     props => ({
       isOpen: false,

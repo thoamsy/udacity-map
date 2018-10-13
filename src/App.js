@@ -1,14 +1,15 @@
-import React, { Component, Placeholder } from 'react';
+import React, { Component, Placeholder, lazy } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
 import { update, set, map, pick } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Spinner from './components/Spinner';
-import Aside from './container/Aside';
 import Map from './components/Map';
 import Navbar from './components/Navbar';
-import Notification from './components/Notification';
+
+const Aside = lazy(() => import('./container/Aside'));
+const Notification = lazy(() => import('./components/Notification'));
 
 const TransformContainer = styled.div.attrs({
   style: props => ({
@@ -29,6 +30,7 @@ class App extends Component {
     hasGeo: false,
     hasExpanded: false,
     notification: '',
+    mapCenter: null,
   };
 
   onBurgerClick = () => {
@@ -57,16 +59,41 @@ class App extends Component {
     return this.pluckPosition(this.state.placelist);
   }
 
+  onClickPlace = i => () => {
+    this.setState({
+      mapCenter: this.state.placelist[i].geometry.location,
+    });
+  };
+
+  clearMapCenter = () => {
+    this.setState({
+      mapCenter: null,
+      zoom: 2,
+    });
+  };
+
   render() {
-    const { center, hasGeo, hasExpanded, notification } = this.state;
+    const {
+      center,
+      hasGeo,
+      hasExpanded,
+      notification,
+      mapCenter,
+      zoom,
+    } = this.state;
     return (
       <TransformContainer hasExpanded={hasExpanded}>
-        <Notification type="danger">{notification}</Notification>
-        <Aside
-          center={center}
-          hasExpanded={hasExpanded}
-          getPlacelist={this.getPlacelist}
-        />
+        <Placeholder>
+          <Notification type="danger">{notification}</Notification>
+        </Placeholder>
+        <Placeholder>
+          <Aside
+            onClickPlace={this.onClickPlace}
+            center={center}
+            hasExpanded={hasExpanded}
+            getPlacelist={this.getPlacelist}
+          />
+        </Placeholder>
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
           <Placeholder>
@@ -74,6 +101,9 @@ class App extends Component {
               !timeout && hasGeo ? (
                 <Map
                   center={center}
+                  zoom={zoom}
+                  mapCenter={mapCenter}
+                  clearMapCenter={this.clearMapCenter}
                   locationOfMarkers={this.locationOfMarkers}
                 />
               ) : (

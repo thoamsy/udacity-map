@@ -33,12 +33,13 @@ export default class Aside extends PureComponent {
   };
 
   render() {
-    const { center, hasExpanded, getPlacelist } = this.props;
+    const { center, hasExpanded, getPlacelist, onClickPlace } = this.props;
     return (
       <AsideContainer hasExpanded={hasExpanded}>
         <Places
           getPlacelist={getPlacelist}
           center={center}
+          onClickPlace={onClickPlace}
           onChange={this.onChange}
           onSubmit={this.onSubmit}
           keyword={this.state.keyword}

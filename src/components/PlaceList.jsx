@@ -22,14 +22,14 @@ const Place = styled.a.attrs({
   }
 `;
 
-const PlaceList = ({ active, center, keyword, getPlacelist }) => {
+const PlaceList = ({ active, center, keyword, getPlacelist, onClickPlace }) => {
   const res = getNearby(center, keyword);
   const places = res?.results ?? [];
   getPlacelist(places);
   return (
     <ul className="menu-list">
       {places.map((place, i) => (
-        <li key={place.id ?? i}>
+        <li key={place.id ?? i} onClick={onClickPlace(i)}>
           <Place
             isActive={active === (place.id ?? i)}
             className="has-text-light"
@@ -62,6 +62,7 @@ const Places = ({
   onChange,
   onSubmit,
   getPlacelist,
+  onClickPlace,
 }) => (
   <aside className="menu has-background-dark section">
     <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
@@ -69,6 +70,7 @@ const Places = ({
     <Placeholder fallback={<Spinner />} delayMs={1000}>
       <PlaceList
         center={center}
+        onClickPlace={onClickPlace}
         keyword={keyword}
         getPlacelist={getPlacelist}
       />
@@ -86,5 +88,6 @@ Places.propTypes = {
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   getPlacelist: PropTypes.func.isRequired,
+  onClickPlace: PropTypes.func.isRequired,
 };
 export default Places;
