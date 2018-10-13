@@ -8,25 +8,11 @@ import {
   InfoWindow,
 } from 'react-google-maps';
 import { withProps, compose, withStateHandlers } from 'recompose';
-import Spinner from './Spinner';
 
 import { API_KEY } from '../constant';
-import weather from '../api/weather';
-import { createResource } from '../cache';
+import Spinner from './Spinner';
+import MarkerInfo from './MarkerInfo';
 
-const weatherResouce = createResource(
-  weather,
-  ({ lng, lat }) => '' + lng + lat
-);
-
-const MarkInfo = ({ center }) => {
-  const weather = weatherResouce.read(center);
-  return (
-    <div>
-      <p>{weather.daily.summary}</p>
-    </div>
-  );
-};
 const Map = ({
   center,
   mapCenter,
@@ -41,7 +27,7 @@ const Map = ({
     zoom={zoom}
     center={mapCenter ?? center}
   >
-    {locationOfMarkers.map(({ geometry, id, name }, i) => (
+    {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
       <Marker
         position={geometry.location}
         onClick={() => onToggleOpen(id)}
@@ -52,7 +38,11 @@ const Map = ({
         {openStatus[id] && (
           <InfoWindow onCloseClick={() => onToggleOpen(id)}>
             <Placeholder delayMs={300} fallback={<Spinner size="small" />}>
-              <MarkInfo center={geometry.location} />
+              <MarkerInfo
+                center={geometry.location}
+                vicinity={vicinity}
+                name={name}
+              />
             </Placeholder>
           </InfoWindow>
         )}
@@ -75,8 +65,8 @@ export default compose(
   ),
   withProps({
     containerElement: <div style={{ height: '100vh', width: '100%' }} />,
-    loadingElement: <div style={{ height: '100%' }} />,
-    mapElement: <div style={{ height: `100%` }} />,
+    loadingElement: <div />,
+    mapElement: <div style={{ height: '100%' }} />,
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3.exp`,
   }),
   withScriptjs,

@@ -60,7 +60,9 @@ class App extends Component {
     this.setState(set(`placelist`, placelist));
   };
 
-  pluckPosition = memoize(map(pick(['geometry.location', 'name', 'id'])));
+  pluckPosition = memoize(
+    map(pick(['geometry.location', 'name', 'id', 'vicinity']))
+  );
   get locationOfMarkers() {
     return this.pluckPosition(this.state.placelist);
   }
