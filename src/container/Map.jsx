@@ -10,8 +10,8 @@ import {
 import { withProps, compose, withStateHandlers } from 'recompose';
 
 import { API_KEY } from '../constant';
-import Spinner from './Spinner';
-import MarkerInfo from './MarkerInfo';
+import Spinner from '../components/Spinner';
+import MarkerInfo from '../components/MarkerInfo';
 
 const Map = ({
   center,

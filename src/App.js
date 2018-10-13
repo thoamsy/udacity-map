@@ -5,7 +5,7 @@ import { update, set, map, pick } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Spinner from './components/Spinner';
-import Map from './components/Map';
+import Map from './container/Map';
 import Navbar from './components/Navbar';
 
 const Aside = lazy(() => import('./container/Aside'));
