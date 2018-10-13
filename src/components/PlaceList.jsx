@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Search from './Search';
+import { SearchConsumer } from '../container/Aside';
 import { createResource } from '../cache';
 import { getPlacesWithKeyword } from '../api/geocode';
 import Spinner from './Spinner';
@@ -57,24 +58,26 @@ PlaceList.propTypes = {
 const Places = ({
   labelName = '附近的地点',
   center,
-  searchValue,
-  keyword,
-  onChange,
-  onSubmit,
   getPlacelist,
   onClickPlace,
 }) => (
   <aside className="menu has-background-dark section">
-    <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
-    <p className="menu-label has-text-light">{labelName}</p>
-    <Placeholder fallback={<Spinner />} delayMs={1000}>
-      <PlaceList
-        center={center}
-        onClickPlace={onClickPlace}
-        keyword={keyword}
-        getPlacelist={getPlacelist}
-      />
-    </Placeholder>
+    <SearchConsumer>
+      {({ searchValue, onChange, onSubmit, keyword }) => (
+        <>
+          <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
+          <p className="menu-label has-text-light">{labelName}</p>
+          <Placeholder fallback={<Spinner />} delayMs={1000}>
+            <PlaceList
+              center={center}
+              keyword={keyword}
+              onClickPlace={onClickPlace}
+              getPlacelist={getPlacelist}
+            />
+          </Placeholder>
+        </>
+      )}
+    </SearchConsumer>
   </aside>
 );
 
@@ -84,9 +87,6 @@ Places.propTypes = {
     lng: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
     lat: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   }).isRequired,
-  searchValue: PropTypes.string,
-  onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
   getPlacelist: PropTypes.func.isRequired,
   onClickPlace: PropTypes.func.isRequired,
 };

@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react';
+import React, { PureComponent, createContext } from 'react';
 import styled from 'styled-components';
 
 import Places from '../components/PlaceList';
@@ -13,6 +13,12 @@ const AsideContainer = styled.section`
   transform: translateX(-100%);
 `;
 
+const SearchContext = createContext({
+  searchValue: '',
+  keyword: '',
+});
+const SearchConsumer = SearchContext.Consumer;
+export { SearchConsumer };
 export default class Aside extends PureComponent {
   state = {
     searchValue: '',
@@ -36,17 +42,21 @@ export default class Aside extends PureComponent {
   render() {
     const { center, hasExpanded, getPlacelist, onClickPlace } = this.props;
     return (
-      <AsideContainer hasExpanded={hasExpanded}>
-        <Places
-          getPlacelist={getPlacelist}
-          center={center}
-          onClickPlace={onClickPlace}
-          onChange={this.onChange}
-          onSubmit={this.onSubmit}
-          keyword={this.state.keyword}
-          value={this.state.searchValue}
-        />
-      </AsideContainer>
+      <SearchContext.Provider
+        value={{
+          ...this.state,
+          onChange: this.onChange,
+          onSubmit: this.onSubmit,
+        }}
+      >
+        <AsideContainer hasExpanded={hasExpanded}>
+          <Places
+            getPlacelist={getPlacelist}
+            center={center}
+            onClickPlace={onClickPlace}
+          />
+        </AsideContainer>
+      </SearchContext.Provider>
     );
   }
 }
