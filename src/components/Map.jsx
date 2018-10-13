@@ -16,17 +16,19 @@ const Map = ({
   isOpen,
   onToggleOpen,
   locationOfMarkers = [],
+  markerAnimation,
 }) => (
   <GoogleMap
     bootstrapURLKeys={{ key: API_KEY }}
     defaultCenter={center}
     defaultZoom={zoom}
   >
-    {locationOfMarkers.map(({ geometry, id, name }) => (
+    {locationOfMarkers.map(({ geometry, id, name }, i) => (
       <Marker
         position={geometry.location}
         onClick={onToggleOpen}
         key={id}
+        animation={markerAnimation[i] ?? google.maps.Animation.DROP}
         title={name}
       >
         {isOpen && (
@@ -59,20 +61,21 @@ const Map = ({
 
 export default compose(
   withStateHandlers(
-    {
+    props => ({
       isOpen: false,
-    },
+      markerAnimation: [],
+    }),
     {
-      onToggleOpen: ({ isOpen }) => () => ({
-        isOpen: !isOpen,
-      }),
+      onToggleOpen: ({ isOpen }) => () => {
+        return { isOpen: !isOpen };
+      },
     }
   ),
   withProps({
     containerElement: <div style={{ height: '100vh', width: '100%' }} />,
     loadingElement: <div style={{ height: '100%' }} />,
     mapElement: <div style={{ height: `100%` }} />,
-    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3`,
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3.exp`,
   }),
   withScriptjs,
   withGoogleMap
