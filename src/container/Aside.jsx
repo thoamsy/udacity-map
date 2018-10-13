@@ -21,6 +21,7 @@ export default class Aside extends PureComponent {
 
   onSubmit = event => {
     event.preventDefault();
+    this.props.clearMapCenter();
     this.setState({
       keyword: this.state.searchValue,
     });

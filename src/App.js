@@ -62,13 +62,14 @@ class App extends Component {
   onClickPlace = i => () => {
     this.setState({
       mapCenter: this.state.placelist[i].geometry.location,
+      zoom: 13,
     });
   };
 
   clearMapCenter = () => {
     this.setState({
       mapCenter: null,
-      zoom: 2,
+      zoom: 12,
     });
   };
 
@@ -86,12 +87,13 @@ class App extends Component {
         <Placeholder>
           <Notification type="danger">{notification}</Notification>
         </Placeholder>
-        <Placeholder>
+        <Placeholder delayMs={200} fallback={<Spinner />}>
           <Aside
             onClickPlace={this.onClickPlace}
             center={center}
             hasExpanded={hasExpanded}
             getPlacelist={this.getPlacelist}
+            clearMapCenter={this.clearMapCenter}
           />
         </Placeholder>
         <main>
@@ -103,7 +105,6 @@ class App extends Component {
                   center={center}
                   zoom={zoom}
                   mapCenter={mapCenter}
-                  clearMapCenter={this.clearMapCenter}
                   locationOfMarkers={this.locationOfMarkers}
                 />
               ) : (

@@ -13,7 +13,7 @@ import { API_KEY } from '../constant';
 const Map = ({
   center,
   mapCenter,
-  zoom = 13,
+  zoom = 12,
   isOpen,
   onToggleOpen,
   locationOfMarkers = [],
@@ -21,7 +21,6 @@ const Map = ({
 }) => (
   <GoogleMap
     bootstrapURLKeys={{ key: API_KEY }}
-    defaultZoom={13}
     zoom={zoom}
     center={mapCenter ?? center}
   >
