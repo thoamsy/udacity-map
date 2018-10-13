@@ -1,9 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Placeholder } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
 import { update, set, map, pick } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
+import Spinner from './components/Spinner';
 import Aside from './container/Aside';
 import Map from './components/Map';
 import Navbar from './components/Navbar';
@@ -68,9 +69,18 @@ class App extends Component {
         />
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-          {hasGeo && (
-            <Map center={center} locationOfMarkers={this.locationOfMarkers} />
-          )}
+          <Placeholder>
+            {timeout =>
+              !timeout && hasGeo ? (
+                <Map
+                  center={center}
+                  locationOfMarkers={this.locationOfMarkers}
+                />
+              ) : (
+                <Spinner size="medium" />
+              )
+            }
+          </Placeholder>
         </main>
       </TransformContainer>
     );
