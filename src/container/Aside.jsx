@@ -19,12 +19,8 @@ const SearchContext = createContext({
 });
 const SearchConsumer = SearchContext.Consumer;
 export { SearchConsumer };
-export default class Aside extends PureComponent {
-  state = {
-    searchValue: '',
-    keyword: '',
-  };
 
+export default class Aside extends PureComponent {
   onSubmit = event => {
     event.preventDefault();
     this.props.clearMapCenter();
@@ -39,16 +35,17 @@ export default class Aside extends PureComponent {
     });
   };
 
+  state = {
+    searchValue: '',
+    keyword: '',
+    onChange: this.onChange,
+    onSubmit: this.onSubmit,
+  };
+
   render() {
     const { center, hasExpanded, getPlacelist, onClickPlace } = this.props;
     return (
-      <SearchContext.Provider
-        value={{
-          ...this.state,
-          onChange: this.onChange,
-          onSubmit: this.onSubmit,
-        }}
-      >
+      <SearchContext.Provider value={this.state}>
         <AsideContainer hasExpanded={hasExpanded}>
           <Places
             getPlacelist={getPlacelist}
