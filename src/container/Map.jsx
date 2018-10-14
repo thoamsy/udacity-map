@@ -59,6 +59,7 @@ export default compose(
     },
     {
       onToggleOpen: state => id => {
+        if (!id) return;
         return update(`openStatus.${id}`, x => !x, state);
       },
       closeMarker: state => id => {
@@ -70,8 +71,8 @@ export default compose(
   lifecycle({
     componentDidUpdate(prevProps) {
       const { beChoosedMarker, onToggleOpen, closeMarker } = this.props;
-      if (beChoosedMarker && beChoosedMarker !== prevProps.beChoosedMarker) {
-        onToggleOpen(beChoosedMarker.id);
+      if (beChoosedMarker !== prevProps.beChoosedMarker) {
+        onToggleOpen(beChoosedMarker?.id);
         closeMarker(prevProps.beChoosedMarker?.id);
       }
     },
