@@ -60,7 +60,6 @@ class App extends Component {
 
   getPlacelist = placelist => {
     if (!placelist?.length || placelist === this.prevPlacelist) return;
-    console.log(111);
     const allIds = map('id', placelist);
     this.setState(set('placelist.allIds', allIds));
     this.setState(set('placelist.byId', zipObject(allIds, placelist)));
@@ -68,21 +67,18 @@ class App extends Component {
   };
 
   placelistSelector = memoize(allIds => {
-    return allIds.reduce((placelist, id) => {
+    const pluckPosition = map(
+      pick(['geometry.location', 'name', 'id', 'vicinity'])
+    );
+    const placelist = allIds.reduce((placelist, id) => {
       placelist[id] = this.state.placelist.byId[id];
       return placelist;
     }, {});
+    return pluckPosition(placelist);
   });
 
-  get placelist() {
-    return this.placelistSelector(this.state.placelist.allIds);
-  }
-
-  pluckPosition = memoize(
-    map(pick(['geometry.location', 'name', 'id', 'vicinity']))
-  );
   get locationOfMarkers() {
-    return this.pluckPosition(this.placelist);
+    return this.placelistSelector(this.state.placelist.allIds);
   }
 
   onClickPlace = id => () => {
