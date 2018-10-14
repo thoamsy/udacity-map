@@ -1,7 +1,7 @@
 import React, { Component, Placeholder, lazy } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
-import { update, set, map, pick } from 'lodash/fp';
+import { update, set, map, pick, zipObject } from 'lodash/fp';
 
 import { getCurrentPosition } from './utils/geo';
 import Spinner from './components/Spinner';
@@ -26,11 +26,14 @@ class App extends Component {
       lat: '',
       lng: '',
     },
-    placelist: [],
+    placelist: {
+      allIds: [],
+      byId: {},
+    },
     hasGeo: false,
     hasExpanded: false,
     notification: '',
-    mapCenter: null,
+    beChoosedMarker: null,
   };
 
   static getDerivedStateFromError(error) {
@@ -56,27 +59,42 @@ class App extends Component {
   }
 
   getPlacelist = placelist => {
-    if (!placelist?.length || this.state.placelist === placelist) return;
-    this.setState(set(`placelist`, placelist));
+    if (!placelist?.length || placelist === this.prevPlacelist) return;
+    console.log(111);
+    const allIds = map('id', placelist);
+    this.setState(set('placelist.allIds', allIds));
+    this.setState(set('placelist.byId', zipObject(allIds, placelist)));
+    this.prevPlacelist = placelist;
   };
+
+  placelistSelector = memoize(allIds => {
+    return allIds.reduce((placelist, id) => {
+      placelist[id] = this.state.placelist.byId[id];
+      return placelist;
+    }, {});
+  });
+
+  get placelist() {
+    return this.placelistSelector(this.state.placelist.allIds);
+  }
 
   pluckPosition = memoize(
     map(pick(['geometry.location', 'name', 'id', 'vicinity']))
   );
   get locationOfMarkers() {
-    return this.pluckPosition(this.state.placelist);
+    return this.pluckPosition(this.placelist);
   }
 
-  onClickPlace = i => () => {
+  onClickPlace = id => () => {
     this.setState({
-      mapCenter: this.state.placelist[i].geometry.location,
+      beChoosedMarker: this.state.placelist.byId[id],
       zoom: 13,
     });
   };
 
   clearMapCenter = () => {
     this.setState({
-      mapCenter: null,
+      beChoosedMarker: null,
       zoom: 12,
     });
   };
@@ -87,7 +105,7 @@ class App extends Component {
       hasGeo,
       hasExpanded,
       notification,
-      mapCenter,
+      beChoosedMarker,
       zoom,
     } = this.state;
     return (
@@ -112,7 +130,7 @@ class App extends Component {
                 <Map
                   center={center}
                   zoom={zoom}
-                  mapCenter={mapCenter}
+                  beChoosedMarker={beChoosedMarker}
                   locationOfMarkers={this.locationOfMarkers}
                 />
               ) : (

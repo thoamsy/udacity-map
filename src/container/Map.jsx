@@ -1,5 +1,5 @@
 import React, { Placeholder } from 'react';
-import { update } from 'lodash/fp';
+import { update, set } from 'lodash/fp';
 import {
   GoogleMap,
   Marker,
@@ -7,7 +7,7 @@ import {
   withScriptjs,
   InfoWindow,
 } from 'react-google-maps';
-import { withProps, compose, withStateHandlers } from 'recompose';
+import { withProps, compose, withStateHandlers, lifecycle } from 'recompose';
 
 import { API_KEY } from '../constant';
 import Spinner from '../components/Spinner';
@@ -15,17 +15,17 @@ import MarkerInfo from '../components/MarkerInfo';
 
 const Map = ({
   center,
-  mapCenter,
   zoom = 12,
   openStatus,
   onToggleOpen,
   locationOfMarkers = [],
   markerAnimation,
+  beChoosedMarker,
 }) => (
   <GoogleMap
     bootstrapURLKeys={{ key: API_KEY }}
     zoom={zoom}
-    center={mapCenter ?? center}
+    center={beChoosedMarker?.geometry?.location ?? center}
   >
     {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
       <Marker
@@ -61,8 +61,21 @@ export default compose(
       onToggleOpen: state => id => {
         return update(`openStatus.${id}`, x => !x, state);
       },
+      closeMarker: state => id => {
+        if (!id) return;
+        return set(`openStatus.${id}`, false, state);
+      },
     }
   ),
+  lifecycle({
+    componentDidUpdate(prevProps) {
+      const { beChoosedMarker, onToggleOpen, closeMarker } = this.props;
+      if (beChoosedMarker && beChoosedMarker !== prevProps.beChoosedMarker) {
+        onToggleOpen(beChoosedMarker.id);
+        closeMarker(prevProps.beChoosedMarker?.id);
+      }
+    },
+  }),
   withProps({
     containerElement: <div style={{ height: '100vh', width: '100%' }} />,
     loadingElement: <div />,

@@ -30,7 +30,7 @@ const PlaceList = ({ active, center, keyword, getPlacelist, onClickPlace }) => {
   return (
     <ul className="menu-list">
       {places.map((place, i) => (
-        <li key={place.id ?? i} onClick={onClickPlace(i)}>
+        <li key={place.id} onClick={onClickPlace(place.id)}>
           <Place
             isActive={active === (place.id ?? i)}
             className="has-text-light"
