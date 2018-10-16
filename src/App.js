@@ -1,4 +1,4 @@
-import React, { Component, Placeholder, lazy } from 'react';
+import React, { Component, unstable_Suspense as Suspense, lazy } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
 import { update, set, map, pick, zipObject } from 'lodash/fp';
@@ -8,7 +8,6 @@ import Spinner from './components/Spinner';
 import Map from './container/Map';
 import Navbar from './components/Navbar';
 
-console.log(React);
 const Aside = lazy(() => import('./container/Aside'));
 const Notification = lazy(() => import('./components/Notification'));
 
@@ -107,10 +106,10 @@ class App extends Component {
     } = this.state;
     return (
       <TransformContainer hasExpanded={hasExpanded}>
-        <Placeholder>
+        <Suspense>
           <Notification type="danger">{notification}</Notification>
-        </Placeholder>
-        <Placeholder delayMs={200} fallback={<Spinner />}>
+        </Suspense>
+        <Suspense maxDuration={200} fallback={<Spinner />}>
           <Aside
             onClickPlace={this.onClickPlace}
             center={center}
@@ -118,10 +117,10 @@ class App extends Component {
             getPlacelist={this.getPlacelist}
             clearMapCenter={this.clearMapCenter}
           />
-        </Placeholder>
+        </Suspense>
         <main>
           <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-          <Placeholder>
+          <Suspense>
             {timeout =>
               !timeout && hasGeo ? (
                 <Map
@@ -134,7 +133,7 @@ class App extends Component {
                 <Spinner size="medium" />
               )
             }
-          </Placeholder>
+          </Suspense>
         </main>
       </TransformContainer>
     );

@@ -1,4 +1,4 @@
-import React, { Placeholder } from 'react';
+import React, { unstable_Suspense as Suspense } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
@@ -67,14 +67,14 @@ const Places = ({
         <>
           <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
           <p className="menu-label has-text-light">{labelName}</p>
-          <Placeholder fallback={<Spinner />} delayMs={1000}>
+          <Suspense fallback={<Spinner />} maxDuration={1000}>
             <PlaceList
               center={center}
               keyword={keyword}
               onClickPlace={onClickPlace}
               getPlacelist={getPlacelist}
             />
-          </Placeholder>
+          </Suspense>
         </>
       )}
     </SearchConsumer>

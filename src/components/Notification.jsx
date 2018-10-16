@@ -80,10 +80,6 @@ class Notification extends Component {
 
   componentWillUnmount() {
     this.container.removeChild(this.ele);
-    this.notification.current.removeEventListener(
-      'transitionend',
-      this.removeNotification
-    );
   }
 
   static propTypes = {

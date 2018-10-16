@@ -1,4 +1,4 @@
-import React, { Placeholder } from 'react';
+import React, { unstable_Suspense as Suspense } from 'react';
 import { update, set } from 'lodash/fp';
 import {
   GoogleMap,
@@ -37,13 +37,13 @@ const Map = ({
       >
         {openStatus[id] && (
           <InfoWindow onCloseClick={() => onToggleOpen(id)}>
-            <Placeholder delayMs={300} fallback={<Spinner size="small" />}>
+            <Suspense maxDuration={300} fallback={<Spinner size="small" />}>
               <MarkerInfo
                 center={geometry.location}
                 vicinity={vicinity}
                 name={name}
               />
-            </Placeholder>
+            </Suspense>
           </InfoWindow>
         )}
       </Marker>
