@@ -8,6 +8,7 @@ import Spinner from './components/Spinner';
 import Map from './container/Map';
 import Navbar from './components/Navbar';
 
+console.log(React);
 const Aside = lazy(() => import('./container/Aside'));
 const Notification = lazy(() => import('./components/Notification'));
 
@@ -84,14 +85,14 @@ class App extends Component {
   onClickPlace = id => () => {
     this.setState({
       beChoosedMarker: this.state.placelist.byId[id],
-      zoom: 13,
+      zoom: 15,
     });
   };
 
   clearMapCenter = () => {
     this.setState({
       beChoosedMarker: null,
-      zoom: 12,
+      zoom: 13,
     });
   };
 
