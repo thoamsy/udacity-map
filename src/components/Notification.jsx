@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { createPortal } from 'react-dom';
 import PropTypes from 'prop-types';
 import styled, { keyframes, css } from 'styled-components';
 
@@ -39,78 +38,71 @@ const NotificationContainer = styled.article.attrs({
 `;
 
 class Notification extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      needToClose: false,
-    };
-    this.container = document.querySelector('#notification');
-    this.createDom();
-  }
+  state = {
+    show: true,
+    notification: '',
+  };
 
-  createDom() {
-    this.ele = document.createElement('div');
-    this.container.appendChild(this.ele);
+  static getDerivedStateFromProps(nextProps, prevState) {
+    console.log(prevState, nextProps.children);
+    if (!prevState.show) {
+      return {
+        notification: nextProps.children,
+        show: true,
+      };
+    }
+    return null;
   }
 
   autoClose() {
-    const { timeout } = this.props;
+    const { timeout = 3000 } = this.props;
+    console.log('how many');
 
     setTimeout(() => {
       this.setState({
-        needToClose: true,
+        show: false,
       });
     }, timeout);
   }
 
-  removeNotification = () => this.container.removeChild(this.ele);
-  componentDidMount = () => {
+  componentDidMount() {
     this.autoClose();
-  };
-
-  componentDidUpdate(prevProps) {
-    if (this.props.children !== prevProps.children) {
-      this.createDom();
-      this.autoClose();
-      this.setState({
-        needToClose: false,
-      });
-    }
   }
 
-  componentWillUnmount() {
-    this.container.removeChild(this.ele);
+  componentDidUpdate(_, prevState) {
+    if (this.state.notification !== prevState.notification) {
+      this.autoClose();
+    }
   }
 
   static propTypes = {
     onClose: PropTypes.func,
+    children: PropTypes.string,
     type: PropTypes.oneOf(['success', 'warning', 'danger']),
     timeout: PropTypes.number,
   };
 
-  static defaultProps = {
-    timeout: 3000,
-  };
-
   renderNotification() {
-    const { type, onClose, children } = this.props;
-    if (!children) return null;
+    const { type, onClose } = this.props;
+    const { notification, show } = this.state;
+    if (!notification) return null;
+
     return (
       <NotificationContainer
-        isShow={!this.state.needToClose}
+        isShow={show}
         type={type}
         onTransitionEnd={this.removeNotification}
       >
         <div className="message-body">
           {onClose && <button className="delete" onClick={onClose} />}
-          {children}
+          {notification}
         </div>
       </NotificationContainer>
     );
   }
 
   render() {
-    return createPortal(this.renderNotification(), this.ele);
+    return this.renderNotification();
   }
 }
 
