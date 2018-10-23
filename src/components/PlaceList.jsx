@@ -23,22 +23,32 @@ const Place = styled.a.attrs({
   }
 `;
 
-const PlaceList = ({ active, center, keyword, getPlacelist, onClickPlace }) => {
+const PlaceList = ({
+  active,
+  center,
+  keyword,
+  getPlacelist,
+  onClickPlace,
+  setErrorNotification,
+}) => {
   const res = getNearby(center, keyword);
-  const places = res?.results ?? [];
+  const { results: places = [], type, err } = res ?? {};
+  err && setErrorNotification(err.message);
   getPlacelist(places);
   return (
-    <ul className="menu-list">
-      {places.map((place, i) => (
-        <li key={place.id} onClick={onClickPlace(place.id)}>
-          <Place
-            isActive={active === (place.id ?? i)}
-            className="has-text-light"
-          >
-            {place.name}
-          </Place>
-        </li>
-      ))}
+    <ul className="menu-list" role="menu">
+      {type === 'error'
+        ? 'Something Error'
+        : places.map((place, i) => (
+            <li key={place.id} onClick={onClickPlace(place.id)}>
+              <Place
+                isActive={active === (place.id ?? i)}
+                className="has-text-light"
+              >
+                {place.name}
+              </Place>
+            </li>
+          ))}
     </ul>
   );
 };
@@ -63,12 +73,13 @@ const Places = ({
 }) => (
   <aside className="menu has-background-dark section">
     <SearchConsumer>
-      {({ searchValue, onChange, onSubmit, keyword }) => (
+      {({ searchValue, onChange, onSubmit, keyword, setErrorNotification }) => (
         <>
           <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
           <p className="menu-label has-text-light">{labelName}</p>
           <Suspense fallback={<Spinner />} maxDuration={1000}>
             <PlaceList
+              setErrorNotification={setErrorNotification}
               center={center}
               keyword={keyword}
               onClickPlace={onClickPlace}

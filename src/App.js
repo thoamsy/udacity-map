@@ -36,14 +36,33 @@ class App extends Component {
     beChoosedMarker: null,
   };
 
-  static getDerivedStateFromError(error) {
-    return {
-      error,
-    };
-  }
+  // static getDerivedStateFromError(error) {
+  //   console.log(typeof error, error.message);
+  //   return {
+  //     notification: error.message,
+  //   };
+  // }
 
   onBurgerClick = () => {
     this.setState(update('hasExpanded', x => !x));
+  };
+
+  setErrorNotification = error => {
+    if (error === this.state.notification) {
+      return;
+    }
+    this.setState(
+      {
+        notification: error,
+      },
+      () => {
+        setTimeout(() => {
+          this.setState({
+            notification: null,
+          });
+        }, 3000);
+      }
+    );
   };
 
   async componentDidMount() {
@@ -105,37 +124,40 @@ class App extends Component {
       zoom,
     } = this.state;
     return (
-      <TransformContainer hasExpanded={hasExpanded}>
+      <>
         <Suspense>
           <Notification type="danger">{notification}</Notification>
         </Suspense>
-        <Suspense maxDuration={200} fallback={<Spinner />}>
-          <Aside
-            onClickPlace={this.onClickPlace}
-            center={center}
-            hasExpanded={hasExpanded}
-            getPlacelist={this.getPlacelist}
-            clearMapCenter={this.clearMapCenter}
-          />
-        </Suspense>
-        <main>
-          <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-          <Suspense>
-            {timeout =>
-              !timeout && hasGeo ? (
-                <Map
-                  center={center}
-                  zoom={zoom}
-                  beChoosedMarker={beChoosedMarker}
-                  locationOfMarkers={this.locationOfMarkers}
-                />
-              ) : (
-                <Spinner size="medium" />
-              )
-            }
+        <TransformContainer hasExpanded={hasExpanded}>
+          <Suspense maxDuration={200} fallback={<Spinner />}>
+            <Aside
+              onClickPlace={this.onClickPlace}
+              center={center}
+              hasExpanded={hasExpanded}
+              getPlacelist={this.getPlacelist}
+              clearMapCenter={this.clearMapCenter}
+              setErrorNotification={this.setErrorNotification}
+            />
           </Suspense>
-        </main>
-      </TransformContainer>
+          <main>
+            <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
+            <Suspense>
+              {timeout =>
+                !timeout && hasGeo ? (
+                  <Map
+                    center={center}
+                    zoom={zoom}
+                    beChoosedMarker={beChoosedMarker}
+                    locationOfMarkers={this.locationOfMarkers}
+                  />
+                ) : (
+                  <Spinner size="medium" />
+                )
+              }
+            </Suspense>
+          </main>
+        </TransformContainer>
+      </>
     );
   }
 }

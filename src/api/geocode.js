@@ -33,15 +33,22 @@ export const getPlacesWithKeyword = async ({ lat, lng, keyword }) => {
   };
   keyword && (options.keyword = keyword);
   const url = getAPIUrl(options);
-  const res = await fetch(url, {
-    mode: 'cors',
-    headers: {
-      'content-type': 'application/json',
-    },
-  });
-  if (res.ok) {
-    return res.json();
-  } else {
-    return res.statusText;
+  try {
+    const res = await fetch(url, {
+      mode: 'cors',
+      headers: {
+        'content-type': 'application/json',
+      },
+    });
+    if (res.ok) {
+      return res.json();
+    } else {
+      return res.statusText;
+    }
+  } catch (err) {
+    return {
+      type: 'error',
+      err,
+    };
   }
 };

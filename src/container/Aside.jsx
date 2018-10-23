@@ -40,6 +40,7 @@ export default class Aside extends PureComponent {
     keyword: '',
     onChange: this.onChange,
     onSubmit: this.onSubmit,
+    setErrorNotification: this.props.setErrorNotification,
   };
 
   render() {

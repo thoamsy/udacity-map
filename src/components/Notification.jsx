@@ -39,40 +39,24 @@ const NotificationContainer = styled.article.attrs({
 
 class Notification extends Component {
   state = {
-    show: true,
     notification: '',
   };
 
   static getDerivedStateFromProps(nextProps, prevState) {
-    console.log(prevState, nextProps.children);
-    if (!prevState.show) {
+    if (prevState.notification && !nextProps.children) {
+      return {
+        show: false,
+      };
+    }
+
+    if (prevState.notification !== nextProps.children) {
       return {
         notification: nextProps.children,
         show: true,
       };
     }
+
     return null;
-  }
-
-  autoClose() {
-    const { timeout = 3000 } = this.props;
-    console.log('how many');
-
-    setTimeout(() => {
-      this.setState({
-        show: false,
-      });
-    }, timeout);
-  }
-
-  componentDidMount() {
-    this.autoClose();
-  }
-
-  componentDidUpdate(_, prevState) {
-    if (this.state.notification !== prevState.notification) {
-      this.autoClose();
-    }
   }
 
   static propTypes = {
@@ -82,6 +66,13 @@ class Notification extends Component {
     timeout: PropTypes.number,
   };
 
+  removeNotification = () => {
+    this.setState({
+      show: false,
+      notification: null,
+    });
+  };
+
   renderNotification() {
     const { type, onClose } = this.props;
     const { notification, show } = this.state;
@@ -89,8 +80,8 @@ class Notification extends Component {
 
     return (
       <NotificationContainer
-        isShow={show}
         type={type}
+        isShow={show}
         onTransitionEnd={this.removeNotification}
       >
         <div className="message-body">
