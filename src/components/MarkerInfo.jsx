@@ -1,6 +1,6 @@
 import React from 'react';
+import { unstable_createResource as createResource } from 'react-cache';
 import weather from '../api/weather';
-import { createResource } from '../cache';
 
 const weatherResouce = createResource(
   weather,

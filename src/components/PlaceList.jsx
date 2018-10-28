@@ -1,10 +1,10 @@
 import React, { unstable_Suspense as Suspense } from 'react';
+import { unstable_createResource as createResource } from 'react-cache';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Search from './Search';
 import { SearchConsumer } from '../container/Aside';
-import { createResource } from '../cache';
 import { getPlacesWithKeyword } from '../api/geocode';
 import Spinner from './Spinner';
 
@@ -12,6 +12,7 @@ const nearbyResource = createResource(
   getPlacesWithKeyword,
   ({ lng, lat, keyword }) => '' + lat + lng + keyword
 );
+
 const getNearby = (center, keyword) =>
   nearbyResource.read({ keyword, ...center });
 
