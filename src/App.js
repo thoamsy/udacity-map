@@ -141,20 +141,16 @@ class App extends Component {
           </Suspense>
           <main>
             <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-            <Suspense>
-              {timeout =>
-                !timeout && hasGeo ? (
-                  <Map
-                    center={center}
-                    zoom={zoom}
-                    beChoosedMarker={beChoosedMarker}
-                    locationOfMarkers={this.locationOfMarkers}
-                  />
-                ) : (
-                  <Spinner size="medium" />
-                )
-              }
-            </Suspense>
+            {hasGeo && (
+              <Suspense fallback={<Spinner size="medium" />}>
+                <Map
+                  center={center}
+                  zoom={zoom}
+                  beChoosedMarker={beChoosedMarker}
+                  locationOfMarkers={this.locationOfMarkers}
+                />
+              </Suspense>
+            )}
           </main>
         </TransformContainer>
       </>
