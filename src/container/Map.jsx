@@ -1,4 +1,4 @@
-import React, { unstable_Suspense as Suspense } from 'react';
+import React, { Suspense } from 'react';
 import { update, set } from 'lodash/fp';
 import {
   GoogleMap,

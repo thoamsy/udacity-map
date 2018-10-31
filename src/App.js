@@ -1,4 +1,4 @@
-import React, { Component, unstable_Suspense as Suspense, lazy } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
 import { update, set, map, pick, zipObject } from 'lodash/fp';

@@ -13,12 +13,10 @@ const AsideContainer = styled.section`
   transform: translateX(-100%);
 `;
 
-const SearchContext = createContext({
+export const SearchContext = createContext({
   searchValue: '',
   keyword: '',
 });
-const SearchConsumer = SearchContext.Consumer;
-export { SearchConsumer };
 
 export default class Aside extends PureComponent {
   onSubmit = event => {

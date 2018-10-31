@@ -1,10 +1,10 @@
-import React, { unstable_Suspense as Suspense } from 'react';
+import React, { Suspense, useContext } from 'react';
 import { unstable_createResource as createResource } from 'react-cache';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 import Search from './Search';
-import { SearchConsumer } from '../container/Aside';
+import { SearchContext } from '../container/Aside';
 import { getPlacesWithKeyword } from '../api/geocode';
 import Spinner from './Spinner';
 
@@ -71,27 +71,28 @@ const Places = ({
   center,
   getPlacelist,
   onClickPlace,
-}) => (
-  <aside className="menu has-background-dark section">
-    <SearchConsumer>
-      {({ searchValue, onChange, onSubmit, keyword, setErrorNotification }) => (
-        <>
-          <Search value={searchValue} onChange={onChange} onSubmit={onSubmit} />
-          <p className="menu-label has-text-light">{labelName}</p>
-          <Suspense fallback={<Spinner />} maxDuration={1000}>
-            <PlaceList
-              setErrorNotification={setErrorNotification}
-              center={center}
-              keyword={keyword}
-              onClickPlace={onClickPlace}
-              getPlacelist={getPlacelist}
-            />
-          </Suspense>
-        </>
-      )}
-    </SearchConsumer>
-  </aside>
-);
+}) => {
+  const context = useContext(SearchContext);
+  return (
+    <aside className="menu has-background-dark section">
+      <Search
+        value={context.searchValue}
+        onChange={context.onChange}
+        onSubmit={context.onSubmit}
+      />
+      <p className="menu-label has-text-light">{labelName}</p>
+      <Suspense fallback={<Spinner />} maxDuration={1000}>
+        <PlaceList
+          setErrorNotification={context.setErrorNotification}
+          center={center}
+          keyword={context.keyword}
+          onClickPlace={onClickPlace}
+          getPlacelist={getPlacelist}
+        />
+      </Suspense>
+    </aside>
+  );
+};
 
 Places.propTypes = {
   labelName: PropTypes.string,
