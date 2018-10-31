@@ -32,26 +32,28 @@ const PlaceList = ({
   onClickPlace,
   setErrorNotification,
 }) => {
-  const res = getNearby(center, keyword);
-  const { results: places = [], type, err } = res ?? {};
-  err && setErrorNotification(err.message);
-  getPlacelist(places);
-  return (
-    <ul className="menu-list" role="menu">
-      {type === 'error'
-        ? 'Something Error'
-        : places.map((place, i) => (
-            <li key={place.id} onClick={onClickPlace(place.id)}>
-              <Place
-                isActive={active === (place.id ?? i)}
-                className="has-text-light"
-              >
-                {place.name}
-              </Place>
-            </li>
-          ))}
-    </ul>
-  );
+  try {
+    const res = getNearby(center, keyword);
+    const { results: places = [] } = res ?? {};
+    getPlacelist(places);
+    return (
+      <ul className="menu-list" role="menu">
+        {places.map((place, i) => (
+          <li key={place.id} onClick={onClickPlace(place.id)}>
+            <Place
+              isActive={active === (place.id ?? i)}
+              className="has-text-light"
+            >
+              {place.name}
+            </Place>
+          </li>
+        ))}
+      </ul>
+    );
+  } catch (err) {
+    err.then(({ message }) => setErrorNotification(message));
+    throw err;
+  }
 };
 
 PlaceList.propTypes = {
@@ -75,11 +77,7 @@ const Places = ({
   const context = useContext(SearchContext);
   return (
     <aside className="menu has-background-dark section">
-      <Search
-        value={context.searchValue}
-        onChange={context.onChange}
-        onSubmit={context.onSubmit}
-      />
+      <Search onSubmit={context.onSubmit} />
       <p className="menu-label has-text-light">{labelName}</p>
       <Suspense fallback={<Spinner />} maxDuration={1000}>
         <PlaceList
