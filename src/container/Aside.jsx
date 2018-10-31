@@ -19,24 +19,16 @@ export const SearchContext = createContext({
 });
 
 export default class Aside extends PureComponent {
-  onSubmit = event => {
+  onSubmit = searchValue => event => {
     event.preventDefault();
     this.props.clearMapCenter();
     this.setState({
-      keyword: this.state.searchValue,
-    });
-  };
-
-  onChange = ({ target }) => {
-    this.setState({
-      searchValue: target.value,
+      keyword: searchValue,
     });
   };
 
   state = {
-    searchValue: '',
     keyword: '',
-    onChange: this.onChange,
     onSubmit: this.onSubmit,
     setErrorNotification: this.props.setErrorNotification,
   };
