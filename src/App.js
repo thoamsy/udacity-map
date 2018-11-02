@@ -1,4 +1,4 @@
-import React, { Component, Suspense, lazy } from 'react';
+import React, { Component, Suspense, lazy, createContext } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
 import { update, set, map, pick, zipObject } from 'lodash/fp';
@@ -7,6 +7,8 @@ import { getCurrentPosition } from './utils/geo';
 import Spinner from './components/Spinner';
 import Map from './container/Map';
 import Navbar from './components/Navbar';
+import useSearch from './hooks/reducer';
+import MapContext from './container/MapContext';
 
 const Aside = lazy(() => import('./container/Aside'));
 const Notification = lazy(() => import('./components/Notification'));
@@ -20,8 +22,8 @@ const TransformContainer = styled.div.attrs({
   transition: transform 0.3s ease-out;
 `;
 
-class App extends Component {
-  state = {
+const Main = ({ children }) => {
+  const [state, dispatch] = useSearch({
     center: {
       lat: '',
       lng: '',
@@ -34,15 +36,15 @@ class App extends Component {
     hasExpanded: false,
     notification: '',
     beChoosedMarker: null,
-  };
+  });
+  return (
+    <MapContext.Provider value={{ state, dispatch }}>
+      {children}
+    </MapContext.Provider>
+  );
+};
 
-  // static getDerivedStateFromError(error) {
-  //   console.log(typeof error, error.message);
-  //   return {
-  //     notification: error.message,
-  //   };
-  // }
-
+class App extends Component {
   onBurgerClick = () => {
     this.setState(update('hasExpanded', x => !x));
   };
@@ -64,18 +66,6 @@ class App extends Component {
       }
     );
   };
-
-  async componentDidMount() {
-    const { coords } = await getCurrentPosition();
-    const center = {
-      lat: coords.latitude,
-      lng: coords.longitude,
-    };
-    this.setState({
-      center,
-      hasGeo: true,
-    });
-  }
 
   getPlacelist = placelist => {
     if (!placelist?.length || placelist === this.prevPlacelist) return;
@@ -115,21 +105,12 @@ class App extends Component {
   };
 
   render() {
-    const {
-      center,
-      hasGeo,
-      hasExpanded,
-      notification,
-      beChoosedMarker,
-      zoom,
-    } = this.state;
+    const { center, hasGeo, hasExpanded, notification, beChoosedMarker, zoom } =
+      this.state ?? {};
     return (
-      <>
-        <Suspense>
-          <Notification type="danger">{notification}</Notification>
-        </Suspense>
+      <Main>
         <TransformContainer hasExpanded={hasExpanded}>
-          <Suspense maxDuration={200} fallback={<Spinner />}>
+          {/* <Suspense maxDuration={200} fallback={<Spinner />}>
             <Aside
               onClickPlace={this.onClickPlace}
               center={center}
@@ -138,22 +119,20 @@ class App extends Component {
               clearMapCenter={this.clearMapCenter}
               setErrorNotification={this.setErrorNotification}
             />
-          </Suspense>
+          </Suspense> */}
           <main>
             <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
-            {hasGeo && (
-              <Suspense fallback={<Spinner size="medium" />}>
-                <Map
-                  center={center}
-                  zoom={zoom}
-                  beChoosedMarker={beChoosedMarker}
-                  locationOfMarkers={this.locationOfMarkers}
-                />
-              </Suspense>
-            )}
+            <Suspense fallback={<Spinner size="medium" />}>
+              <Map
+                center={center}
+                zoom={zoom}
+                beChoosedMarker={beChoosedMarker}
+                // locationOfMarkers={this.locationOfMarkers}
+              />
+            </Suspense>
           </main>
         </TransformContainer>
-      </>
+      </Main>
     );
   }
 }
