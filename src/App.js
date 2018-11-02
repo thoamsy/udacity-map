@@ -2,13 +2,13 @@ import React, { Suspense, lazy } from 'react';
 import styled from 'styled-components';
 
 import Spinner from './components/Spinner';
-import Map from './container/Map';
 import Navbar from './components/Navbar';
 import useSearch from './hooks/reducer';
 import MapContext from './container/MapContext';
 
 const Aside = lazy(() => import('./container/Aside'));
 const Notification = lazy(() => import('./components/Notification'));
+const Map = lazy(() => import('./container/Map'));
 
 const TransformContainer = styled.div.attrs({
   style: props => ({
@@ -34,6 +34,7 @@ const App = () => {
     notification: '',
     beChoosedMarker: null,
   });
+
   return (
     // TODO: 每一次 value 都是全新的。
     <MapContext.Provider value={{ store, dispatch }}>
