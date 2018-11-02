@@ -10,8 +10,20 @@ const nearbyResource = createResource(
   ({ lng, lat, keyword }) => '' + lat + lng + keyword
 );
 
-const getNearby = (center, keyword) =>
-  nearbyResource.read({ keyword, ...center });
+let prevPlacelist = null;
+const useNearBy = ({ dispatch, center, keyword }) => {
+  const { results: places } = nearbyResource.read({ keyword, ...center }) ?? {};
+
+  if (prevPlacelist !== places) {
+    dispatch({
+      type: 'getNearby',
+      payload: places,
+    });
+    prevPlacelist = places;
+  }
+
+  return places ?? [];
+};
 
 const Place = styled.a.attrs({
   className: ({ isActive }) => (isActive ? 'is-active' : ''),
@@ -22,14 +34,20 @@ const Place = styled.a.attrs({
 `;
 
 const PlaceList = ({ active }) => {
-  const { store } = useContext(MapContext);
+  const { store, dispatch } = useContext(MapContext);
   const { center, keyword } = store;
 
   const onClickPlace = id => () => {
-    console.log(id);
+    dispatch({
+      type: 'clickPlace',
+      payload: {
+        zoom: 15,
+        id,
+      },
+    });
   };
-  const res = getNearby(center, keyword);
-  const { results: places = [] } = res ?? {};
+
+  const places = useNearBy({ center, keyword, dispatch });
   return (
     <ul className="menu-list" role="menu">
       {places.map((place, i) => (

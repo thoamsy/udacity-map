@@ -1,10 +1,9 @@
 import styled from 'styled-components';
-import React, { Suspense, useContext } from 'react';
+import React, { Suspense } from 'react';
 
 import PlaceList from '../components/PlaceList';
 import Spinner from '../components/Spinner';
 import Search from '../components/Search';
-import MapContext from './MapContext';
 
 const AsideContainer = styled.section`
   width: 400px;
@@ -17,16 +16,13 @@ const AsideContainer = styled.section`
 `;
 
 const Aside = ({ labelName = '附近的地点' }) => {
-  const { dispath, store } = useContext(MapContext);
-
-  const { center, keyword } = store;
   return (
     <AsideContainer>
       <aside className="menu has-background-dark section">
         <Search />
         <p className="menu-label has-text-light">{labelName}</p>
         <Suspense fallback={<Spinner />} maxDuration={1000}>
-          <PlaceList center={center} keyword={keyword} />
+          <PlaceList />
         </Suspense>
       </aside>
     </AsideContainer>

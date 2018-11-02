@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { set, __, merge, update } from 'lodash/fp';
+import { set, __, merge, update, map, zipObject } from 'lodash/fp';
 
 const reducer = (state, action) => {
   const { type, payload } = action;
@@ -10,6 +10,19 @@ const reducer = (state, action) => {
     }
     case 'setCenter': {
       return setState('center');
+    }
+    case 'getNearBy': {
+      const placelist = payload;
+      if (state.prevPlacelist === placelist) {
+        return state;
+      }
+      const allIds = map('id', placelist);
+      return (
+        state
+        |> set('placelist.allIds', allIds)
+        |> set('placelist.byId', zipObject(allIds, placelist))
+        |> set('prevPlacelist', placelist)
+      );
     }
     case 'clearCenter':
     case 'clickPlace':
