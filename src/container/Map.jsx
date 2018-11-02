@@ -16,15 +16,14 @@ import MarkerInfo from '../components/MarkerInfo';
 import MapContext from './MapContext';
 
 const Map = ({
-  center,
-  zoom = 12,
   openStatus,
   onToggleOpen,
   locationOfMarkers = [],
   markerAnimation,
-  beChoosedMarker,
 }) => {
-  const { dispatch } = useContext(MapContext);
+  const { dispatch, store } = useContext(MapContext);
+
+  const { zoom, center } = store;
   useEffect(async () => {
     const { coords } = await getCurrentPosition();
     const center = {
@@ -32,17 +31,13 @@ const Map = ({
       lng: coords.longitude,
     };
     dispatch({
-      type: 'center',
+      type: 'setCenter',
       payload: center,
     });
   }, []);
 
   return (
-    <GoogleMap
-      bootstrapURLKeys={{ key: API_KEY }}
-      zoom={zoom}
-      center={beChoosedMarker?.geometry?.location ?? center}
-    >
+    <GoogleMap bootstrapURLKeys={{ key: API_KEY }} zoom={zoom} center={center}>
       {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
         <Marker
           position={geometry.location}
@@ -86,6 +81,7 @@ export default compose(
     }
   ),
   lifecycle({
+    // TODO: rewrite
     componentDidUpdate(prevProps) {
       const { beChoosedMarker, onToggleOpen, closeMarker } = this.props;
       if (beChoosedMarker !== prevProps.beChoosedMarker) {

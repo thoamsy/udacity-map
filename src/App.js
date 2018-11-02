@@ -1,9 +1,8 @@
-import React, { Component, Suspense, lazy, createContext } from 'react';
+import React, { Component, Suspense, lazy } from 'react';
 import styled from 'styled-components';
 import memoize from 'memoize-one';
 import { update, set, map, pick, zipObject } from 'lodash/fp';
 
-import { getCurrentPosition } from './utils/geo';
 import Spinner from './components/Spinner';
 import Map from './container/Map';
 import Navbar from './components/Navbar';
@@ -23,10 +22,10 @@ const TransformContainer = styled.div.attrs({
 `;
 
 const Main = ({ children }) => {
-  const [state, dispatch] = useSearch({
+  const [store, dispatch] = useSearch({
     center: {
-      lat: '',
-      lng: '',
+      lat: 30.2775947,
+      lng: 120.12117539999998,
     },
     placelist: {
       allIds: [],
@@ -38,7 +37,7 @@ const Main = ({ children }) => {
     beChoosedMarker: null,
   });
   return (
-    <MapContext.Provider value={{ state, dispatch }}>
+    <MapContext.Provider value={{ store, dispatch }}>
       {children}
     </MapContext.Provider>
   );
@@ -105,11 +104,9 @@ class App extends Component {
   };
 
   render() {
-    const { center, hasGeo, hasExpanded, notification, beChoosedMarker, zoom } =
-      this.state ?? {};
     return (
       <Main>
-        <TransformContainer hasExpanded={hasExpanded}>
+        <TransformContainer>
           {/* <Suspense maxDuration={200} fallback={<Spinner />}>
             <Aside
               onClickPlace={this.onClickPlace}
@@ -121,13 +118,10 @@ class App extends Component {
             />
           </Suspense> */}
           <main>
-            <Navbar onClick={this.onBurgerClick} isOpen={hasExpanded} />
+            <Navbar onClick={this.onBurgerClick} />
             <Suspense fallback={<Spinner size="medium" />}>
               <Map
-                center={center}
-                zoom={zoom}
-                beChoosedMarker={beChoosedMarker}
-                // locationOfMarkers={this.locationOfMarkers}
+              // locationOfMarkers={this.locationOfMarkers}
               />
             </Suspense>
           </main>

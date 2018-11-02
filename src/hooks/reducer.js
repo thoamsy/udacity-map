@@ -1,16 +1,19 @@
 import { useReducer } from 'react';
-import { set, __ } from 'lodash/fp';
+import { set, __, merge } from 'lodash/fp';
 
 const reducer = (state, action) => {
   const { type, payload } = action;
-  const setState = set(__, __, state);
+  const setState = set(__, payload, state);
   switch (type) {
     case 'search': {
-      return setState('keyword', payload);
+      return setState('keyword');
     }
     case 'setCenter': {
-      return setState('center', payload);
+      return setState('center');
     }
+    case 'clearCenter':
+    case 'clickPlace':
+      return merge(payload, state);
     default:
       return state;
   }
