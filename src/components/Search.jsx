@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import MapContext from '../container/MapContext';
 
-const Search = ({ onSubmit }) => {
+const Search = () => {
   const [value, setValue] = useState('');
+  const { dispatch } = useContext(MapContext);
   const onChange = ({ target }) => setValue(target.value);
 
+  const onSubmit = event => {
+    event.preventDefault();
+    dispatch({
+      type: 'search',
+      payload: value,
+    });
+  };
+
   return (
-    <form onSubmit={onSubmit(value)} className="form">
+    <form onSubmit={onSubmit} className="form">
       <div className="field has-addons">
         <div className="control is-expanded">
           <input
