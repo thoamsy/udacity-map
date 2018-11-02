@@ -1,7 +1,5 @@
-import React, { Component, Suspense, lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import styled from 'styled-components';
-import memoize from 'memoize-one';
-import { update, set, map, pick, zipObject } from 'lodash/fp';
 
 import Spinner from './components/Spinner';
 import Map from './container/Map';
@@ -21,7 +19,7 @@ const TransformContainer = styled.div.attrs({
   transition: transform 0.3s ease-out;
 `;
 
-const Main = ({ children }) => {
+const App = () => {
   const [store, dispatch] = useSearch({
     center: {
       lat: 30.2775947,
@@ -37,72 +35,21 @@ const Main = ({ children }) => {
     beChoosedMarker: null,
   });
   return (
+    // TODO: 每一次 value 都是全新的。
     <MapContext.Provider value={{ store, dispatch }}>
-      {children}
+      <TransformContainer hasExpanded={store.hasExpanded}>
+        <Suspense maxDuration={200} fallback={<Spinner />}>
+          <Aside />
+        </Suspense>
+        <main>
+          <Navbar />
+          <Suspense fallback={<Spinner size="medium" />}>
+            <Map />
+          </Suspense>
+        </main>
+      </TransformContainer>
     </MapContext.Provider>
   );
 };
-
-class App extends Component {
-  getPlacelist = placelist => {
-    if (!placelist?.length || placelist === this.prevPlacelist) return;
-    const allIds = map('id', placelist);
-    this.setState(set('placelist.allIds', allIds));
-    this.setState(set('placelist.byId', zipObject(allIds, placelist)));
-    this.prevPlacelist = placelist;
-  };
-
-  placelistSelector = memoize(allIds => {
-    const pluckPosition = map(
-      pick(['geometry.location', 'name', 'id', 'vicinity'])
-    );
-    const placelist = allIds.reduce((placelist, id) => {
-      placelist[id] = this.state.placelist.byId[id];
-      return placelist;
-    }, {});
-    return pluckPosition(placelist);
-  });
-
-  get locationOfMarkers() {
-    return this.placelistSelector(this.state.placelist.allIds);
-  }
-
-  onClickPlace = id => () => {
-    this.setState({
-      beChoosedMarker: this.state.placelist.byId[id],
-      zoom: 15,
-    });
-  };
-
-  clearMapCenter = () => {
-    this.setState({
-      beChoosedMarker: null,
-      zoom: 13,
-    });
-  };
-
-  render() {
-    return (
-      <Main>
-        <TransformContainer>
-          <Suspense maxDuration={200} fallback={<Spinner />}>
-            <Aside
-              onClickPlace={this.onClickPlace}
-              getPlacelist={this.getPlacelist}
-              clearMapCenter={this.clearMapCenter}
-              setErrorNotification={this.setErrorNotification}
-            />
-          </Suspense>
-          <main>
-            <Navbar />
-            <Suspense fallback={<Spinner size="medium" />}>
-              <Map />
-            </Suspense>
-          </main>
-        </TransformContainer>
-      </Main>
-    );
-  }
-}
 
 export default App;

@@ -46,4 +46,4 @@ const PlaceList = ({ active }) => {
   );
 };
 
-export default Places;
+export default PlaceList;
