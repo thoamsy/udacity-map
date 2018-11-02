@@ -1,7 +1,10 @@
-import React, { PureComponent, createContext } from 'react';
 import styled from 'styled-components';
+import React, { Suspense, useContext } from 'react';
 
-import Places from '../components/PlaceList';
+import PlaceList from '../components/PlaceList';
+import Spinner from '../components/Spinner';
+import Search from '../components/Search';
+import MapContext from './MapContext';
 
 const AsideContainer = styled.section`
   width: 400px;
@@ -13,38 +16,20 @@ const AsideContainer = styled.section`
   transform: translateX(-100%);
 `;
 
-export const SearchContext = createContext({
-  searchValue: '',
-  keyword: '',
-});
+const Aside = ({ labelName = '附近的地点' }) => {
+  const { dispath, store } = useContext(MapContext);
 
-export default class Aside extends PureComponent {
-  onSubmit = searchValue => event => {
-    event.preventDefault();
-    this.props.clearMapCenter();
-    this.setState({
-      keyword: searchValue,
-    });
-  };
-
-  state = {
-    keyword: '',
-    onSubmit: this.onSubmit,
-    setErrorNotification: this.props.setErrorNotification,
-  };
-
-  render() {
-    const { center, hasExpanded, getPlacelist, onClickPlace } = this.props;
-    return (
-      <SearchContext.Provider value={this.state}>
-        <AsideContainer hasExpanded={hasExpanded}>
-          <Places
-            getPlacelist={getPlacelist}
-            center={center}
-            onClickPlace={onClickPlace}
-          />
-        </AsideContainer>
-      </SearchContext.Provider>
-    );
-  }
-}
+  const { center, keyword } = store;
+  return (
+    <AsideContainer>
+      <aside className="menu has-background-dark section">
+        <Search />
+        <p className="menu-label has-text-light">{labelName}</p>
+        <Suspense fallback={<Spinner />} maxDuration={1000}>
+          <PlaceList center={center} keyword={keyword} />
+        </Suspense>
+      </aside>
+    </AsideContainer>
+  );
+};
+export default Aside;
