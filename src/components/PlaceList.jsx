@@ -51,7 +51,6 @@ const PlaceList = ({
       </ul>
     );
   } catch (err) {
-    err.then(res => setErrorNotification(res));
     throw err;
   }
 };

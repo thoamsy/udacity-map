@@ -44,28 +44,6 @@ const Main = ({ children }) => {
 };
 
 class App extends Component {
-  onBurgerClick = () => {
-    this.setState(update('hasExpanded', x => !x));
-  };
-
-  setErrorNotification = error => {
-    if (error === this.state.notification) {
-      return;
-    }
-    this.setState(
-      {
-        notification: error,
-      },
-      () => {
-        setTimeout(() => {
-          this.setState({
-            notification: null,
-          });
-        }, 3000);
-      }
-    );
-  };
-
   getPlacelist = placelist => {
     if (!placelist?.length || placelist === this.prevPlacelist) return;
     const allIds = map('id', placelist);
@@ -107,22 +85,18 @@ class App extends Component {
     return (
       <Main>
         <TransformContainer>
-          {/* <Suspense maxDuration={200} fallback={<Spinner />}>
+          <Suspense maxDuration={200} fallback={<Spinner />}>
             <Aside
               onClickPlace={this.onClickPlace}
-              center={center}
-              hasExpanded={hasExpanded}
               getPlacelist={this.getPlacelist}
               clearMapCenter={this.clearMapCenter}
               setErrorNotification={this.setErrorNotification}
             />
-          </Suspense> */}
+          </Suspense>
           <main>
-            <Navbar onClick={this.onBurgerClick} />
+            <Navbar />
             <Suspense fallback={<Spinner size="medium" />}>
-              <Map
-              // locationOfMarkers={this.locationOfMarkers}
-              />
+              <Map />
             </Suspense>
           </main>
         </TransformContainer>

@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { set, __, merge } from 'lodash/fp';
+import { set, __, merge, update } from 'lodash/fp';
 
 const reducer = (state, action) => {
   const { type, payload } = action;
@@ -14,6 +14,8 @@ const reducer = (state, action) => {
     case 'clearCenter':
     case 'clickPlace':
       return merge(payload, state);
+    case 'TOGGLE_SIDE_BAR':
+      return update('hasExpanded', x => !x, state);
     default:
       return state;
   }
