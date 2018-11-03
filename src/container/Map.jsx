@@ -1,4 +1,10 @@
-import React, { Suspense, useEffect, useContext, useMemo } from 'react';
+import React, {
+  Suspense,
+  useEffect,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 import { update, set, map, pick } from 'lodash/fp';
 import {
   GoogleMap,
@@ -7,7 +13,7 @@ import {
   withScriptjs,
   InfoWindow,
 } from 'react-google-maps';
-import { withProps, compose, withStateHandlers, lifecycle } from 'recompose';
+import { withProps, compose, lifecycle } from 'recompose';
 
 import { getCurrentPosition } from '../utils/geo';
 import { API_KEY } from '../constant';
@@ -15,7 +21,7 @@ import Spinner from '../components/Spinner';
 import MarkerInfo from '../components/MarkerInfo';
 import MapContext from './MapContext';
 
-const Map = ({ openStatus, onToggleOpen, markerAnimation }) => {
+const Map = ({ onToggleOpen }) => {
   const { dispatch, store } = useContext(MapContext);
 
   const {
@@ -24,6 +30,7 @@ const Map = ({ openStatus, onToggleOpen, markerAnimation }) => {
     beChoosedMarker,
     placelist: { allIds, byId },
   } = store;
+
   useEffect(async () => {
     const { coords } = await getCurrentPosition();
     const center = {
@@ -41,6 +48,16 @@ const Map = ({ openStatus, onToggleOpen, markerAnimation }) => {
     [allIds]
   );
 
+  const [openStatus, setStatus] = useState({});
+  const onToggleMarker = id => () => {
+    if (!id) return;
+    return setStatus(update(id, x => !x, openStatus));
+  };
+  const closeMarker = id => () => {
+    if (!id) return;
+    return setStatus(set(id, false, openStatus));
+  };
+
   return (
     <GoogleMap
       bootstrapURLKeys={{ key: API_KEY }}
@@ -50,13 +67,13 @@ const Map = ({ openStatus, onToggleOpen, markerAnimation }) => {
       {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
         <Marker
           position={geometry.location}
-          onClick={() => onToggleOpen(id)}
+          onClick={onToggleMarker(id)}
           key={id}
-          animation={markerAnimation[i] ?? google.maps.Animation.DROP}
+          animation={google.maps.Animation.DROP}
           title={name}
         >
           {openStatus[id] && (
-            <InfoWindow onCloseClick={() => onToggleOpen(id)}>
+            <InfoWindow onCloseClick={onToggleMarker(id)}>
               <Suspense maxDuration={300} fallback={<Spinner size="small" />}>
                 <MarkerInfo
                   center={geometry.location}
@@ -73,22 +90,6 @@ const Map = ({ openStatus, onToggleOpen, markerAnimation }) => {
 };
 
 export default compose(
-  withStateHandlers(
-    {
-      openStatus: {},
-      markerAnimation: {},
-    },
-    {
-      onToggleOpen: state => id => {
-        if (!id) return;
-        return update(`openStatus.${id}`, x => !x, state);
-      },
-      closeMarker: state => id => {
-        if (!id) return;
-        return set(`openStatus.${id}`, false, state);
-      },
-    }
-  ),
   lifecycle({
     // TODO: rewrite
     componentDidUpdate(prevProps) {
