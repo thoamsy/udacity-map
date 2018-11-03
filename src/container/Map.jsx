@@ -75,7 +75,7 @@ const Map = () => {
   return (
     <GoogleMap
       bootstrapURLKeys={bootstrapURLKeys}
-      zoom={zoom}
+      zoom={zoom ?? 11}
       center={beChoosedMarker?.geometry?.location ?? center}
     >
       {locationOfMarkers.map(({ geometry, id, name, vicinity }) => (
