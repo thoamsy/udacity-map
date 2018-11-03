@@ -11,7 +11,7 @@ const reducer = (state, action) => {
     case 'setCenter': {
       return setState('center');
     }
-    case 'getNearBy': {
+    case 'getNearby': {
       const placelist = payload;
       if (state.prevPlacelist === placelist) {
         return state;
@@ -25,17 +25,18 @@ const reducer = (state, action) => {
       );
     }
     case 'clearCenter':
-    case 'clickPlace':
       return merge(payload, state);
     case 'TOGGLE_SIDE_BAR':
       return update('hasExpanded', x => !x, state);
+    case 'clickPlace': {
+      const { zoom, id } = payload;
+      return merge(state, { zoom, beChoosedMarker: state.placelist.byId[id] });
+    }
     default:
       return state;
   }
 };
 
-const useSearchState = initialState => {
-  return useReducer(reducer, initialState);
-};
+const useSearchState = initialState => useReducer(reducer, initialState);
 
 export default useSearchState;

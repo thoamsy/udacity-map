@@ -23,7 +23,7 @@ const Map = ({
 }) => {
   const { dispatch, store } = useContext(MapContext);
 
-  const { zoom, center } = store;
+  const { zoom, center, beChoosedMarker } = store;
   useEffect(async () => {
     const { coords } = await getCurrentPosition();
     const center = {
@@ -37,7 +37,11 @@ const Map = ({
   }, []);
 
   return (
-    <GoogleMap bootstrapURLKeys={{ key: API_KEY }} zoom={zoom} center={center}>
+    <GoogleMap
+      bootstrapURLKeys={{ key: API_KEY }}
+      zoom={zoom}
+      center={beChoosedMarker?.geometry?.location ?? center}
+    >
       {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
         <Marker
           position={geometry.location}
