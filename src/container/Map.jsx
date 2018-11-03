@@ -3,12 +3,11 @@ import React, {
   useEffect,
   useContext,
   useRef,
-  useCallback,
   lazy,
   useMemo,
   useState,
 } from 'react';
-import { update, set, map, pick } from 'lodash/fp';
+import { update, map, pick } from 'lodash/fp';
 import {
   GoogleMap,
   Marker,
@@ -25,7 +24,7 @@ import MapContext from './MapContext';
 
 const MarkerInfo = lazy(() => import('../components/MarkerInfo'));
 
-const Map = ({ onToggleOpen }) => {
+const Map = () => {
   const { dispatch, store } = useContext(MapContext);
 
   const {
@@ -53,24 +52,18 @@ const Map = ({ onToggleOpen }) => {
   );
 
   const [openStatus, setStatus] = useState({});
-  const onToggleMarker = id => () => {
+  const onToggleMarker = id => {
     if (!id) return;
     return setStatus(update(id, x => !x, openStatus));
-  };
-
-  const closeMarker = id => () => {
-    if (!id) return;
-    return setStatus(set(id, false, openStatus));
   };
 
   const markerRef = useRef();
 
   useEffect(
     () => {
+      setStatus({}); // 清除之前的
       onToggleMarker(beChoosedMarker?.id);
-      closeMarker(markerRef.current?.id);
       markerRef.current = beChoosedMarker;
-      console.count(markerRef.current?.id);
     },
     [beChoosedMarker]
   );
@@ -83,13 +76,13 @@ const Map = ({ onToggleOpen }) => {
       {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
         <Marker
           position={geometry.location}
-          onClick={onToggleMarker(id)}
+          onClick={() => onToggleMarker(id)}
           key={id}
           animation={google.maps.Animation.DROP}
           title={name}
         >
           {openStatus[id] && (
-            <InfoWindow onCloseClick={onToggleMarker(id)}>
+            <InfoWindow onCloseClick={() => onToggleMarker(id)}>
               <Suspense maxDuration={300} fallback={<Spinner size="small" />}>
                 <MarkerInfo
                   center={geometry.location}
