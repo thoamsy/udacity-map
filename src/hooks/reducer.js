@@ -1,5 +1,5 @@
 import { useReducer } from 'react';
-import { set, __, merge, update, map, zipObject } from 'lodash/fp';
+import { set, __, merge, map, zipObject } from 'lodash/fp';
 
 const reducer = (state, action) => {
   const { type, payload } = action;
