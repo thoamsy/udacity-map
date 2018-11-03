@@ -3,7 +3,7 @@ import { unstable_createResource as createResource } from 'react-cache';
 import styled from 'styled-components';
 
 import { getPlacesWithKeyword } from '../api/geocode';
-import MapContext from '../container/MapContext';
+import { DispatchContext, StoreContext } from '../container/SearchContext';
 
 const nearbyResource = createResource(
   getPlacesWithKeyword,
@@ -34,7 +34,8 @@ const Place = styled.a.attrs({
 `;
 
 const PlaceList = ({ active }) => {
-  const { store, dispatch } = useContext(MapContext);
+  const dispatch = useContext(DispatchContext);
+  const store = useContext(StoreContext);
   const { center, keyword } = store;
 
   const onClickPlace = id => () => {

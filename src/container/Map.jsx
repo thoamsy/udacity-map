@@ -20,7 +20,7 @@ import { withProps, compose } from 'recompose';
 import { getCurrentPosition } from '../utils/geo';
 import { API_KEY } from '../constant';
 import Spinner from '../components/Spinner';
-import MapContext from './MapContext';
+import { DispatchContext, StoreContext } from './SearchContext';
 
 const MarkerInfo = lazy(() => import('../components/MarkerInfo'));
 
@@ -28,7 +28,8 @@ const bootstrapURLKeys = {
   key: API_KEY,
 };
 const Map = () => {
-  const { dispatch, store } = useContext(MapContext);
+  const dispatch = useContext(DispatchContext);
+  const store = useContext(StoreContext);
 
   const {
     zoom,

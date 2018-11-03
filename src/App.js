@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Spinner from './components/Spinner';
 import Navbar from './components/Navbar';
 import useSearch from './hooks/reducer';
-import MapContext from './container/MapContext';
+import { DispatchContext, StoreContext } from './container/SearchContext';
 
 const Aside = lazy(() => import('./container/Aside'));
 const Notification = lazy(() => import('./components/Notification'));
@@ -21,10 +21,7 @@ const TransformContainer = styled.div.attrs({
 
 const App = () => {
   const [store, dispatch] = useSearch({
-    center: {
-      lat: 30.2775947,
-      lng: 120.12117539999998,
-    },
+    center: null,
     placelist: {
       allIds: [],
       byId: {},
@@ -40,19 +37,22 @@ const App = () => {
 
   return (
     // TODO: 每一次 value 都是全新的。
-    <MapContext.Provider value={{ store, dispatch }}>
-      <TransformContainer hasExpanded={hasExpanded}>
-        <Suspense maxDuration={200} fallback={<Spinner />}>
-          <Aside />
-        </Suspense>
-        <main>
-          <Navbar hasExpanded={hasExpanded} toggleNavbar={toggleNavbar} />
-          <Suspense fallback={<Spinner size="medium" />}>
-            <Map />
+    <DispatchContext.Provider value={dispatch}>
+      <StoreContext.Provider value={store}>
+        <TransformContainer hasExpanded={hasExpanded}>
+          <Suspense maxDuration={200} fallback={<Spinner />}>
+            {/* 如果是 ConcurrentMode，可以使用 hidden */}
+            <Aside />
           </Suspense>
-        </main>
-      </TransformContainer>
-    </MapContext.Provider>
+          <main>
+            <Navbar hasExpanded={hasExpanded} toggleNavbar={toggleNavbar} />
+            <Suspense fallback={<Spinner size="medium" />}>
+              <Map />
+            </Suspense>
+          </main>
+        </TransformContainer>
+      </StoreContext.Provider>
+    </DispatchContext.Provider>
   );
 };
 

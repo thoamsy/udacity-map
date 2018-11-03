@@ -1,9 +1,9 @@
 import React, { useState, useContext } from 'react';
-import MapContext from '../container/MapContext';
+import { DispatchContext } from '../container/SearchContext';
 
 const Search = () => {
   const [value, setValue] = useState('');
-  const { dispatch } = useContext(MapContext);
+  const dispatch = useContext(DispatchContext);
   const onChange = ({ target }) => setValue(target.value);
 
   const onSubmit = event => {
