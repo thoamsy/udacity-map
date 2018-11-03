@@ -6,7 +6,11 @@ const reducer = (state, action) => {
   const setState = set(__, payload, state);
   switch (type) {
     case 'search': {
-      return setState('keyword');
+      return merge(state, {
+        keyword: payload,
+        beChoosedMarker: null,
+        zoom: 12,
+      });
     }
     case 'setCenter': {
       return setState('center');
