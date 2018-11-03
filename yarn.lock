@@ -2924,7 +2924,7 @@ eslint-plugin-jsx-a11y@5.1.1:
 
 eslint-plugin-react-hooks@^0.0.0:
   version "0.0.0"
-  resolved "http://registry.npm.qima-inc.com/eslint-plugin-react-hooks/download/eslint-plugin-react-hooks-0.0.0.tgz#9988f14082a159931c3dfa9ba699130457da927a"
+  resolved "http://registry.npm.taobao.org/eslint-plugin-react-hooks/download/eslint-plugin-react-hooks-0.0.0.tgz#9988f14082a159931c3dfa9ba699130457da927a"
   integrity sha1-mYjxQIKhWZMcPfqbppkTBFfakno=
 
 eslint-plugin-react@7.4.0:
@@ -5310,7 +5310,7 @@ mem@^1.1.0:
   dependencies:
     mimic-fn "^1.0.0"
 
-memoize-one@^4.0.0, memoize-one@^4.0.2:
+memoize-one@^4.0.0:
   version "4.0.2"
   resolved "http://registry.npm.taobao.org/memoize-one/download/memoize-one-4.0.2.tgz#3fb8db695aa14ab9c0f1644e1585a8806adc1aee"
   integrity sha1-P7jbaVqhSrnA8WROFYWogGrcGu4=
