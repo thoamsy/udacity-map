@@ -1,5 +1,5 @@
-import React, { Suspense, useEffect, useContext } from 'react';
-import { update, set } from 'lodash/fp';
+import React, { Suspense, useEffect, useContext, useMemo } from 'react';
+import { update, set, map, pick } from 'lodash/fp';
 import {
   GoogleMap,
   Marker,
@@ -15,15 +15,15 @@ import Spinner from '../components/Spinner';
 import MarkerInfo from '../components/MarkerInfo';
 import MapContext from './MapContext';
 
-const Map = ({
-  openStatus,
-  onToggleOpen,
-  locationOfMarkers = [],
-  markerAnimation,
-}) => {
+const Map = ({ openStatus, onToggleOpen, markerAnimation }) => {
   const { dispatch, store } = useContext(MapContext);
 
-  const { zoom, center, beChoosedMarker } = store;
+  const {
+    zoom,
+    center,
+    beChoosedMarker,
+    placelist: { allIds, byId },
+  } = store;
   useEffect(async () => {
     const { coords } = await getCurrentPosition();
     const center = {
@@ -35,6 +35,11 @@ const Map = ({
       payload: center,
     });
   }, []);
+
+  const locationOfMarkers = useMemo(
+    () => map(pick(['geometry.location', 'name', 'id', 'vicinity']))(byId),
+    [allIds]
+  );
 
   return (
     <GoogleMap
