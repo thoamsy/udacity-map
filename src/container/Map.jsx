@@ -24,6 +24,9 @@ import MapContext from './MapContext';
 
 const MarkerInfo = lazy(() => import('../components/MarkerInfo'));
 
+const bootstrapURLKeys = {
+  key: API_KEY,
+};
 const Map = () => {
   const { dispatch, store } = useContext(MapContext);
 
@@ -69,11 +72,11 @@ const Map = () => {
   );
   return (
     <GoogleMap
-      bootstrapURLKeys={{ key: API_KEY }}
+      bootstrapURLKeys={bootstrapURLKeys}
       zoom={zoom}
       center={beChoosedMarker?.geometry?.location ?? center}
     >
-      {locationOfMarkers.map(({ geometry, id, name, vicinity }, i) => (
+      {locationOfMarkers.map(({ geometry, id, name, vicinity }) => (
         <Marker
           position={geometry.location}
           onClick={() => onToggleMarker(id)}
