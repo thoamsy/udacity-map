@@ -11,13 +11,17 @@ export const getLocationWithLatLng = async ({ lat, lng }) => {
   if (!(lat && lng)) return;
   const url = getAPIUrl({ category: 'geocode', latlng: `${lat},${lng}` });
 
-  const res = await fetch(url, {
-    mode: 'cors',
-  });
-  if (res.ok) {
-    return res.json();
-  } else {
-    return res.statusText;
+  try {
+    const res = await fetch(url, {
+      mode: 'cors',
+    });
+    if (res.ok) {
+      return res.json();
+    } else {
+      return res.statusText;
+    }
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -33,22 +37,15 @@ export const getPlacesWithKeyword = async ({ lat, lng, keyword }) => {
   };
   keyword && (options.keyword = keyword);
   const url = getAPIUrl(options);
-  try {
-    const res = await fetch(url, {
-      mode: 'cors',
-      headers: {
-        'content-type': 'application/json',
-      },
-    });
-    if (res.ok) {
-      return res.json();
-    } else {
-      return res.statusText;
-    }
-  } catch (err) {
-    return {
-      type: 'error',
-      err,
-    };
+  const res = await fetch(url, {
+    mode: 'cors',
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+  if (res.ok) {
+    return res.json();
+  } else {
+    return res.statusText;
   }
 };
