@@ -2,6 +2,7 @@ import React, {
   Suspense,
   useEffect,
   useContext,
+  useRef,
   useCallback,
   lazy,
   useMemo,
@@ -15,7 +16,7 @@ import {
   withScriptjs,
   InfoWindow,
 } from 'react-google-maps';
-import { withProps, compose, lifecycle } from 'recompose';
+import { withProps, compose } from 'recompose';
 
 import { getCurrentPosition } from '../utils/geo';
 import { API_KEY } from '../constant';
@@ -62,6 +63,17 @@ const Map = ({ onToggleOpen }) => {
     return setStatus(set(id, false, openStatus));
   };
 
+  const markerRef = useRef();
+
+  useEffect(
+    () => {
+      onToggleMarker(beChoosedMarker?.id);
+      closeMarker(markerRef.current?.id);
+      markerRef.current = beChoosedMarker;
+      console.count(markerRef.current?.id);
+    },
+    [beChoosedMarker]
+  );
   return (
     <GoogleMap
       bootstrapURLKeys={{ key: API_KEY }}
@@ -94,16 +106,6 @@ const Map = ({ onToggleOpen }) => {
 };
 
 export default compose(
-  lifecycle({
-    // TODO: rewrite
-    componentDidUpdate(prevProps) {
-      const { beChoosedMarker, onToggleOpen, closeMarker } = this.props;
-      if (beChoosedMarker !== prevProps.beChoosedMarker) {
-        onToggleOpen(beChoosedMarker?.id);
-        closeMarker(prevProps.beChoosedMarker?.id);
-      }
-    },
-  }),
   withProps({
     containerElement: <div style={{ height: '100vh', width: '100%' }} />,
     loadingElement: <div />,
