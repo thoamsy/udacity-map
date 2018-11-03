@@ -26,8 +26,6 @@ const reducer = (state, action) => {
     }
     case 'clearCenter':
       return merge(payload, state);
-    case 'TOGGLE_SIDE_BAR':
-      return update('hasExpanded', x => !x, state);
     case 'clickPlace': {
       const { zoom, id } = payload;
       return merge(state, { zoom, beChoosedMarker: state.placelist.byId[id] });

@@ -1,22 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import cx from 'classnames';
 
-import MapContext from '../container/MapContext';
-
-const Navbar = () => {
-  const {
-    dispatch,
-    store: { hasExpanded },
-  } = useContext(MapContext);
-  const onBurgerClick = () => {
-    dispatch({
-      type: 'TOGGLE_SIDE_BAR',
-    });
-  };
+const Navbar = ({ hasExpanded, toggleNavbar }) => {
   return (
     <nav className="navbar is-dark" aria-label="main navigation">
       <div className="navbar-brand">
-        <div className="navbar-item" onClick={onBurgerClick}>
+        <div className="navbar-item" onClick={toggleNavbar}>
           <a
             className={cx(['navbar-burger', { 'is-active': hasExpanded }])}
             style={{ display: 'block' }}

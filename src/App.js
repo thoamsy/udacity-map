@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, useState, useCallback } from 'react';
 import styled from 'styled-components';
 
 import Spinner from './components/Spinner';
@@ -29,21 +29,24 @@ const App = () => {
       allIds: [],
       byId: {},
     },
-    hasGeo: false,
-    hasExpanded: false,
     notification: '',
     beChoosedMarker: null,
   });
 
+  const [hasExpanded, setExpanded] = useState(false);
+  const toggleNavbar = useCallback(() => setExpanded(!hasExpanded), [
+    hasExpanded,
+  ]);
+
   return (
     // TODO: 每一次 value 都是全新的。
     <MapContext.Provider value={{ store, dispatch }}>
-      <TransformContainer hasExpanded={store.hasExpanded}>
+      <TransformContainer hasExpanded={hasExpanded}>
         <Suspense maxDuration={200} fallback={<Spinner />}>
           <Aside />
         </Suspense>
         <main>
-          <Navbar />
+          <Navbar hasExpanded={hasExpanded} toggleNavbar={toggleNavbar} />
           <Suspense fallback={<Spinner size="medium" />}>
             <Map />
           </Suspense>
