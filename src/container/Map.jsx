@@ -2,6 +2,8 @@ import React, {
   Suspense,
   useEffect,
   useContext,
+  useCallback,
+  lazy,
   useMemo,
   useState,
 } from 'react';
@@ -18,8 +20,9 @@ import { withProps, compose, lifecycle } from 'recompose';
 import { getCurrentPosition } from '../utils/geo';
 import { API_KEY } from '../constant';
 import Spinner from '../components/Spinner';
-import MarkerInfo from '../components/MarkerInfo';
 import MapContext from './MapContext';
+
+const MarkerInfo = lazy(() => import('../components/MarkerInfo'));
 
 const Map = ({ onToggleOpen }) => {
   const { dispatch, store } = useContext(MapContext);
@@ -53,6 +56,7 @@ const Map = ({ onToggleOpen }) => {
     if (!id) return;
     return setStatus(update(id, x => !x, openStatus));
   };
+
   const closeMarker = id => () => {
     if (!id) return;
     return setStatus(set(id, false, openStatus));
