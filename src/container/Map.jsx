@@ -39,16 +39,17 @@ const Map = () => {
 
   useEffect(async () => {
     const { coords } = await getCurrentPosition();
-    const center = {
+    const payload = {
       lat: coords.latitude,
       lng: coords.longitude,
     };
     dispatch({
       type: 'setCenter',
-      payload: center,
+      payload,
     });
   }, []);
 
+  if (!center) return null;
   const locationOfMarkers = useMemo(
     () => map(pick(['geometry.location', 'name', 'id', 'vicinity']))(byId),
     [allIds]
