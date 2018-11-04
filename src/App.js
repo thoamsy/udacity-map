@@ -36,11 +36,10 @@ const App = () => {
   ]);
 
   return (
-    // TODO: 每一次 value 都是全新的。
     <DispatchContext.Provider value={dispatch}>
       <StoreContext.Provider value={store}>
         <TransformContainer hasExpanded={hasExpanded}>
-          <Suspense maxDuration={200} fallback={<Spinner />}>
+          <Suspense fallback={null}>
             {/* 如果是 ConcurrentMode，可以使用 hidden */}
             <Aside show={hasExpanded} />
           </Suspense>

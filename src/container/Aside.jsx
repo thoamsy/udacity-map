@@ -19,10 +19,14 @@ const style = { minHeight: 900 };
 const Aside = ({ labelName = '附近的地点', show }) => {
   return (
     <AsideContainer>
-      <aside className="menu has-background-dark section" style={style}>
+      <aside
+        className="menu has-background-dark section"
+        style={style}
+        aria-hidden={!show}
+      >
         <Search />
         <p className="menu-label has-text-light">{labelName}</p>
-        <Suspense fallback={<Spinner />} maxDuration={1000}>
+        <Suspense fallback={<Spinner />} maxDuration={500}>
           <PlaceList show={show} />
         </Suspense>
       </aside>

@@ -50,11 +50,18 @@ const PlaceList = ({ show }) => {
   };
 
   const places = useNearBy({ center, keyword, dispatch });
+
+  if (!places.length) return null;
   const ref = useRef();
 
-  useEffect(() => ref.current && ref.current.focus(), [ref.current]);
+  useEffect(
+    () => {
+      ref.current && ref.current.focus();
+    },
+    [show]
+  );
 
-  const [currentCursor, setCursor] = useState(places[0]?.id);
+  const [currentCursor, setCursor] = useState(places[0].id);
   const moveCursor = useEnter(({ target: { dataset } }) => {
     onClickPlace(dataset.id)();
     setCursor(dataset.id);
@@ -68,7 +75,7 @@ const PlaceList = ({ show }) => {
           ref={id === currentCursor ? ref : null}
           onClick={onClickPlace(id)}
           data-id={id}
-          tabIndex={show ? 0 : -1}
+          tabIndex={0}
           role="menuitem"
         >
           <Place isActive={currentCursor === id} className="has-text-light">
