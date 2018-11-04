@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import { unstable_createResource as createResource } from 'react-cache';
 import styled from 'styled-components';
 
@@ -49,10 +49,35 @@ const PlaceList = ({ active }) => {
   };
 
   const places = useNearBy({ center, keyword, dispatch });
+  const ref = useRef();
+  // ref.current?.focus?.();
+  ref.current && ref.current.focus();
+
+  const [currentCursor, setCursor] = useState(0);
+  const moveCursor = event => {
+    event.preventDefault();
+    const {
+      key,
+      target: { dataset },
+    } = event;
+    if (key === ' ' || key === 'Enter') {
+      onClickPlace(dataset.id)();
+      setCursor(dataset.index);
+    }
+  };
+
   return (
-    <ul className="menu-list" role="menu">
+    <ul className="menu-list" role="menu" onKeyPress={moveCursor}>
       {places.map((place, i) => (
-        <li key={place.id} onClick={onClickPlace(place.id)}>
+        <li
+          key={place.id}
+          ref={i === currentCursor ? ref : null}
+          onClick={onClickPlace(place.id)}
+          data-id={place.id}
+          data-index={i}
+          tabIndex={0}
+          role="menuitem"
+        >
           <Place
             isActive={active === (place.id ?? i)}
             className="has-text-light"
