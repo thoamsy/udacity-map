@@ -16,14 +16,14 @@ const AsideContainer = styled.section`
 `;
 
 const style = { minHeight: 900 };
-const Aside = ({ labelName = '附近的地点' }) => {
+const Aside = ({ labelName = '附近的地点', show }) => {
   return (
     <AsideContainer>
       <aside className="menu has-background-dark section" style={style}>
         <Search />
         <p className="menu-label has-text-light">{labelName}</p>
         <Suspense fallback={<Spinner />} maxDuration={1000}>
-          <PlaceList />
+          <PlaceList show={show} />
         </Suspense>
       </aside>
     </AsideContainer>

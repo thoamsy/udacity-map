@@ -42,7 +42,7 @@ const App = () => {
         <TransformContainer hasExpanded={hasExpanded}>
           <Suspense maxDuration={200} fallback={<Spinner />}>
             {/* 如果是 ConcurrentMode，可以使用 hidden */}
-            <Aside />
+            <Aside show={hasExpanded} />
           </Suspense>
           <main>
             <Navbar hasExpanded={hasExpanded} toggleNavbar={toggleNavbar} />

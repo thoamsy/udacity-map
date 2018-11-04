@@ -34,7 +34,7 @@ const Place = styled.a.attrs({
   }
 `;
 
-const PlaceList = ({ active }) => {
+const PlaceList = ({ show }) => {
   const dispatch = useContext(DispatchContext);
   const store = useContext(StoreContext);
   const { center, keyword } = store;
@@ -57,7 +57,7 @@ const PlaceList = ({ active }) => {
   const [currentCursor, setCursor] = useState(0);
   const moveCursor = useEnter(({ target: { dataset } }) => {
     onClickPlace(dataset.id)();
-    setCursor(dataset.index);
+    setCursor(+dataset.index);
   });
 
   return (
@@ -69,13 +69,10 @@ const PlaceList = ({ active }) => {
           onClick={onClickPlace(place.id)}
           data-id={place.id}
           data-index={i}
-          tabIndex={0}
+          tabIndex={show ? 0 : -1}
           role="menuitem"
         >
-          <Place
-            isActive={active === (place.id ?? i)}
-            className="has-text-light"
-          >
+          <Place isActive={currentCursor === i} className="has-text-light">
             {place.name}
           </Place>
         </li>
