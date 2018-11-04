@@ -105,7 +105,7 @@ const Map = () => {
 
 export default compose(
   withProps({
-    containerElement: <div style={{ height: '868px', width: '100%' }} />,
+    containerElement: <div style={{ height: '832px', width: '100%' }} />,
     loadingElement: <div />,
     mapElement: <div style={{ height: '100%' }} />,
     googleMapURL: `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&v=3.exp`,

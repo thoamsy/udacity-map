@@ -15,7 +15,7 @@ const AsideContainer = styled.section`
   transform: translateX(-100%);
 `;
 
-const style = { height: 800 };
+const style = { minHeight: 900 };
 const Aside = ({ labelName = '附近的地点' }) => {
   return (
     <AsideContainer>
