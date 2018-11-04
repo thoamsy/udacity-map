@@ -4,6 +4,7 @@ import styled from 'styled-components';
 
 import { getPlacesWithKeyword } from '../api/geocode';
 import { DispatchContext, StoreContext } from '../container/SearchContext';
+import useEnter from '../hooks/useEnter';
 
 const nearbyResource = createResource(
   getPlacesWithKeyword,
@@ -54,17 +55,10 @@ const PlaceList = ({ active }) => {
   ref.current && ref.current.focus();
 
   const [currentCursor, setCursor] = useState(0);
-  const moveCursor = event => {
-    event.preventDefault();
-    const {
-      key,
-      target: { dataset },
-    } = event;
-    if (key === ' ' || key === 'Enter') {
-      onClickPlace(dataset.id)();
-      setCursor(dataset.index);
-    }
-  };
+  const moveCursor = useEnter(({ target: { dataset } }) => {
+    onClickPlace(dataset.id)();
+    setCursor(dataset.index);
+  });
 
   return (
     <ul className="menu-list" role="menu" onKeyPress={moveCursor}>
