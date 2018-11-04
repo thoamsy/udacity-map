@@ -11,16 +11,16 @@ const nearbyResource = createResource(
   ({ lng, lat, keyword }) => '' + lat + lng + keyword
 );
 
-let prevPlacelist = null;
 const useNearBy = ({ dispatch, center, keyword }) => {
-  const { results: places } = nearbyResource.read({ keyword, ...center }) ?? {};
+  const prevPlacelist = useRef();
 
-  if (prevPlacelist !== places) {
+  const { results: places } = nearbyResource.read({ keyword, ...center }) ?? {};
+  if (prevPlacelist.current !== places) {
     dispatch({
       type: 'getNearby',
       payload: places,
     });
-    prevPlacelist = places;
+    prevPlacelist.current = places;
   }
 
   return places ?? [];
