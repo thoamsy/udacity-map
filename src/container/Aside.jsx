@@ -15,10 +15,11 @@ const AsideContainer = styled.section`
   transform: translateX(-100%);
 `;
 
+const style = { height: 800 };
 const Aside = ({ labelName = '附近的地点' }) => {
   return (
     <AsideContainer>
-      <aside className="menu has-background-dark section">
+      <aside className="menu has-background-dark section" style={style}>
         <Search />
         <p className="menu-label has-text-light">{labelName}</p>
         <Suspense fallback={<Spinner />} maxDuration={1000}>
